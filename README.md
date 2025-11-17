@@ -1,5 +1,3 @@
-You can replace your current README.md with this content:
-
 # campusCircle-Backend
 
 This is the backend of the **campusCircle** project, a Spring Boot application using PostgreSQL (Neon DB) and Hibernate JPA.
@@ -17,22 +15,18 @@ This is the backend of the **campusCircle** project, a Spring Boot application u
 ```bash
 git clone git@github.com:billelz/campusCircle-Backend.git
 cd campusCircle-Backend
-
+```
 
 Install Maven (if not already installed)
-
+```
 sudo apt update
 sudo apt install maven
-
-
-Configure your database
-
-Make sure your application.properties has the correct Neon database credentials.
+```
 
 Run the project
-
+```
 mvn spring-boot:run
-
+```
 
 The server will start on port 8081.
 
