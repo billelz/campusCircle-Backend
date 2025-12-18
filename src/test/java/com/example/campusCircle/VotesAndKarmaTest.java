@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Map;
+
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,10 +26,23 @@ class VotesAndKarmaTest {
     @Autowired
     private KarmaRepository karmaRepository;
 
+    @Autowired
+    private com.example.campusCircle.repository.UsersRepository usersRepository;
+
+    private com.example.campusCircle.model.Users testUser;
+
+    @org.junit.jupiter.api.BeforeEach
+    void setUp() {
+        testUser = new com.example.campusCircle.model.Users();
+        testUser.setUsername("testuser");
+        testUser.setEmail("test@example.com");
+        testUser = usersRepository.save(testUser);
+    }
+
     @Test
     void testVotePersistence() {
         Vote vote = new Vote();
-        vote.setUserId(1L);
+        vote.setUser(testUser);
         vote.setContentId(101L);
         vote.setContentType(ContentType.POST);
         vote.setVoteValue(1);
@@ -42,20 +55,21 @@ class VotesAndKarmaTest {
         assertTrue(retrievedVote.isPresent());
         assertEquals(ContentType.POST, retrievedVote.get().getContentType());
         assertEquals(1, retrievedVote.get().getVoteValue());
+        assertEquals(testUser.getId(), retrievedVote.get().getUser().getId());
     }
 
     @Test
     void testKarmaPersistence() {
         Karma karma = new Karma();
-        karma.setUserId(2L);
+        karma.setUser(testUser);
         karma.setKarmaScore(100L);
         karma.getKarmaByChannel().put(55L, 10);
         karma.getKarmaByChannel().put(56L, 20);
 
         Karma savedKarma = karmaRepository.save(karma);
-        assertEquals(2L, savedKarma.getUserId());
+        assertEquals(testUser.getId(), savedKarma.getUserId());
 
-        Optional<Karma> retrievedKarma = karmaRepository.findById(2L);
+        Optional<Karma> retrievedKarma = karmaRepository.findById(testUser.getId());
         assertTrue(retrievedKarma.isPresent());
         assertEquals(100L, retrievedKarma.get().getKarmaScore());
         assertEquals(2, retrievedKarma.get().getKarmaByChannel().size());

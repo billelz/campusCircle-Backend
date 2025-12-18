@@ -18,7 +18,9 @@ public class Vote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
     private Long contentId;
 
     @Enumerated(EnumType.STRING)
