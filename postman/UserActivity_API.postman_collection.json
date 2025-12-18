@@ -1,0 +1,311 @@
+{
+	"info": {
+		"_postman_id": "user-activity-api",
+		"name": "User Activity API",
+		"description": "Complete CRUD operations for User Activity MongoDB collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test MongoDB Connection",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/user-activity/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-activity",
+						"test"
+					]
+				},
+				"description": "Tests the MongoDB connection and returns status with all user activities"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All User Activities",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/user-activity",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-activity"
+					]
+				},
+				"description": "Retrieves all user activities from MongoDB"
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Activity by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/user-activity/REPLACE_WITH_ACTUAL_ID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-activity",
+						"REPLACE_WITH_ACTUAL_ID"
+					]
+				},
+				"description": "Retrieves a specific user activity by ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Activity by Username",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/user-activity/username/test_user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-activity",
+						"username",
+						"test_user"
+					]
+				},
+				"description": "Retrieves a specific user's activity by username"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Active Users Since Date",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/user-activity/active-since?date=2025-12-17T00:00:00",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-activity",
+						"active-since"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2025-12-17T00:00:00"
+						}
+					]
+				},
+				"description": "Gets users who were active after a specific date/time"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users by Channel",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/user-activity/channel/technology",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-activity",
+						"channel",
+						"technology"
+					]
+				},
+				"description": "Gets all users who are active in a specific channel"
+			},
+			"response": []
+		},
+		{
+			"name": "Create User Activity",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"test_user\",\n  \"lastActive\": \"2025-12-18T15:30:00\",\n  \"activeChannels\": [\n    \"technology\",\n    \"science\",\n    \"programming\"\n  ],\n  \"viewingHistory\": [\n    {\n      \"postId\": \"post_123\",\n      \"title\": \"Introduction to Spring Boot\",\n      \"viewedAt\": \"2025-12-18T14:20:00\",\n      \"duration\": 120,\n      \"channel\": \"technology\"\n    },\n    {\n      \"postId\": \"post_456\",\n      \"title\": \"MongoDB Best Practices\",\n      \"viewedAt\": \"2025-12-18T15:10:00\",\n      \"duration\": 300,\n      \"channel\": \"programming\"\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/user-activity",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-activity"
+					]
+				},
+				"description": "Creates a new user activity document in MongoDB"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Another User Activity",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"jane_smith\",\n  \"lastActive\": \"2025-12-18T16:45:00\",\n  \"activeChannels\": [\n    \"art\",\n    \"music\",\n    \"travel\",\n    \"food\"\n  ],\n  \"viewingHistory\": [\n    {\n      \"postId\": \"post_789\",\n      \"title\": \"Modern Art Techniques\",\n      \"viewedAt\": \"2025-12-18T16:00:00\",\n      \"duration\": 180,\n      \"channel\": \"art\",\n      \"liked\": true\n    },\n    {\n      \"postId\": \"post_101\",\n      \"title\": \"Best Travel Destinations 2025\",\n      \"viewedAt\": \"2025-12-18T16:20:00\",\n      \"duration\": 240,\n      \"channel\": \"travel\",\n      \"liked\": true,\n      \"bookmarked\": true\n    },\n    {\n      \"postId\": \"post_202\",\n      \"title\": \"Italian Cuisine Basics\",\n      \"viewedAt\": \"2025-12-18T16:40:00\",\n      \"duration\": 150,\n      \"channel\": \"food\"\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/user-activity",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-activity"
+					]
+				},
+				"description": "Creates another user activity with different data"
+			},
+			"response": []
+		},
+		{
+			"name": "Update User Activity by ID",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"test_user\",\n  \"lastActive\": \"2025-12-18T17:00:00\",\n  \"activeChannels\": [\n    \"technology\",\n    \"science\",\n    \"programming\",\n    \"ai\"\n  ],\n  \"viewingHistory\": [\n    {\n      \"postId\": \"post_123\",\n      \"title\": \"Introduction to Spring Boot\",\n      \"viewedAt\": \"2025-12-18T14:20:00\",\n      \"duration\": 120,\n      \"channel\": \"technology\"\n    },\n    {\n      \"postId\": \"post_456\",\n      \"title\": \"MongoDB Best Practices\",\n      \"viewedAt\": \"2025-12-18T15:10:00\",\n      \"duration\": 300,\n      \"channel\": \"programming\"\n    },\n    {\n      \"postId\": \"post_999\",\n      \"title\": \"AI and Machine Learning Trends\",\n      \"viewedAt\": \"2025-12-18T16:50:00\",\n      \"duration\": 420,\n      \"channel\": \"ai\",\n      \"liked\": true\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/user-activity/REPLACE_WITH_ACTUAL_ID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-activity",
+						"REPLACE_WITH_ACTUAL_ID"
+					]
+				},
+				"description": "Updates an existing user activity. Replace REPLACE_WITH_ACTUAL_ID with the actual MongoDB _id"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Last Active Time",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/user-activity/update-active/test_user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-activity",
+						"update-active",
+						"test_user"
+					]
+				},
+				"description": "Updates only the lastActive timestamp to current time for a specific user"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User Activity by ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/user-activity/REPLACE_WITH_ACTUAL_ID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-activity",
+						"REPLACE_WITH_ACTUAL_ID"
+					]
+				},
+				"description": "Deletes a user activity by ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User Activity by Username",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/user-activity/username/test_user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-activity",
+						"username",
+						"test_user"
+					]
+				},
+				"description": "Deletes a user activity by username"
+			},
+			"response": []
+		}
+	]
+}

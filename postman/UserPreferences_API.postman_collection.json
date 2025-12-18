@@ -1,0 +1,191 @@
+{
+	"info": {
+		"_postman_id": "user-preferences-api",
+		"name": "User Preferences API",
+		"description": "Complete CRUD operations for User Preferences MongoDB collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test MongoDB Connection",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/user-preferences/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-preferences",
+						"test"
+					]
+				},
+				"description": "Tests the MongoDB connection and returns status with all preferences"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All User Preferences",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/user-preferences",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-preferences"
+					]
+				},
+				"description": "Retrieves all user preferences from MongoDB"
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Preference by Username",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/user-preferences/test_user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-preferences",
+						"test_user"
+					]
+				},
+				"description": "Retrieves a specific user's preferences by username"
+			},
+			"response": []
+		},
+		{
+			"name": "Create User Preference",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"test_user\",\n  \"feedSettings\": {\n    \"sortBy\": \"recent\",\n    \"showImages\": true,\n    \"postsPerPage\": 20,\n    \"autoRefresh\": false\n  },\n  \"notificationPreferences\": {\n    \"emailNotifications\": true,\n    \"pushNotifications\": false,\n    \"notifyOnComments\": true,\n    \"notifyOnLikes\": false,\n    \"notifyOnFollows\": true,\n    \"notifyOnMentions\": true\n  },\n  \"contentFilters\": {\n    \"hideNSFW\": true,\n    \"blockedKeywords\": [\"spam\", \"ads\", \"promotional\"],\n    \"preferredTopics\": [\"technology\", \"science\", \"education\"],\n    \"blockedUsers\": []\n  }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/user-preferences",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-preferences"
+					]
+				},
+				"description": "Creates a new user preference document in MongoDB"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Another User Preference",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"jane_smith\",\n  \"feedSettings\": {\n    \"sortBy\": \"popular\",\n    \"showImages\": true,\n    \"postsPerPage\": 50,\n    \"autoRefresh\": true,\n    \"compactView\": false\n  },\n  \"notificationPreferences\": {\n    \"emailNotifications\": false,\n    \"pushNotifications\": true,\n    \"notifyOnComments\": true,\n    \"notifyOnLikes\": true,\n    \"notifyOnFollows\": true,\n    \"notifyOnMentions\": true,\n    \"quietHoursEnabled\": true,\n    \"quietHoursStart\": \"22:00\",\n    \"quietHoursEnd\": \"08:00\"\n  },\n  \"contentFilters\": {\n    \"hideNSFW\": false,\n    \"blockedKeywords\": [],\n    \"preferredTopics\": [\"art\", \"music\", \"travel\", \"food\"],\n    \"blockedUsers\": [\"spam_account_123\"],\n    \"showOnlyFollowing\": false\n  }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/user-preferences",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-preferences"
+					]
+				},
+				"description": "Creates another user preference with different settings"
+			},
+			"response": []
+		},
+		{
+			"name": "Update User Preference by ID",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"test_user\",\n  \"feedSettings\": {\n    \"sortBy\": \"trending\",\n    \"showImages\": false,\n    \"postsPerPage\": 30,\n    \"autoRefresh\": true\n  },\n  \"notificationPreferences\": {\n    \"emailNotifications\": false,\n    \"pushNotifications\": true,\n    \"notifyOnComments\": false,\n    \"notifyOnLikes\": true,\n    \"notifyOnFollows\": true,\n    \"notifyOnMentions\": true\n  },\n  \"contentFilters\": {\n    \"hideNSFW\": true,\n    \"blockedKeywords\": [\"spam\", \"ads\"],\n    \"preferredTopics\": [\"technology\", \"programming\", \"AI\"],\n    \"blockedUsers\": [\"annoying_user\"]\n  }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/user-preferences/REPLACE_WITH_ACTUAL_ID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-preferences",
+						"REPLACE_WITH_ACTUAL_ID"
+					]
+				},
+				"description": "Updates an existing user preference. Replace REPLACE_WITH_ACTUAL_ID with the actual MongoDB _id from a GET request"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User Preference by ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/user-preferences/REPLACE_WITH_ACTUAL_ID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"user-preferences",
+						"REPLACE_WITH_ACTUAL_ID"
+					]
+				},
+				"description": "Deletes a user preference by ID. Replace REPLACE_WITH_ACTUAL_ID with the actual MongoDB _id"
+			},
+			"response": []
+		}
+	]
+}
