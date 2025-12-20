@@ -1,6 +1,5 @@
 package com.example.campusCircle.service;
 
-
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -33,9 +32,9 @@ public class CommentService {
     public Comment updateComment(Long id, Comment updated) {
         Comment existing = getCommentById(id);
 
-        existing.setPostId(updated.getPostId());
+        existing.setPost(updated.getPost());
         existing.setAuthorUsername(updated.getAuthorUsername());
-        existing.setParentCommentId(updated.getParentCommentId());
+        existing.setParentComment(updated.getParentComment());
 
         return commentRepository.save(existing);
     }
