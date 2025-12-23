@@ -1,0 +1,392 @@
+{
+	"info": {
+		"_postman_id": "search-index-api",
+		"name": "Search Index API",
+		"description": "Complete CRUD operations for Search Index MongoDB collection - indexed post/comment text for fast search",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test MongoDB Connection",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/search-index/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index",
+						"test"
+					]
+				},
+				"description": "Tests the MongoDB connection and returns status with all search indices"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Search Indices",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/search-index",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index"
+					]
+				},
+				"description": "Retrieves all search indices from MongoDB"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Search Index by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/search-index/REPLACE_WITH_ACTUAL_ID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index",
+						"REPLACE_WITH_ACTUAL_ID"
+					]
+				},
+				"description": "Retrieves a specific search index by ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Search Index by Content ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/search-index/content/post_123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index",
+						"content",
+						"post_123"
+					]
+				},
+				"description": "Retrieves search index for a specific content (post or comment)"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Search Indices by Type",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/search-index/type/post",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index",
+						"type",
+						"post"
+					]
+				},
+				"description": "Gets all search indices by content type (post or comment)"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Search Indices by Author",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/search-index/author/john_doe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index",
+						"author",
+						"john_doe"
+					]
+				},
+				"description": "Gets all search indices by author username"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Search Indices by Channel",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/search-index/channel/technology",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index",
+						"channel",
+						"technology"
+					]
+				},
+				"description": "Gets all search indices by channel"
+			},
+			"response": []
+		},
+		{
+			"name": "Search by Keyword",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/search-index/search/keyword?keyword=spring",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index",
+						"search",
+						"keyword"
+					],
+					"query": [
+						{
+							"key": "keyword",
+							"value": "spring"
+						}
+					]
+				},
+				"description": "Searches content by keyword in the keywords array"
+			},
+			"response": []
+		},
+		{
+			"name": "Search by Text",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/search-index/search/text?text=MongoDB",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index",
+						"search",
+						"text"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "MongoDB"
+						}
+					]
+				},
+				"description": "Searches content by text in the indexed text field"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Indices Created After Date",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/search-index/created-after?date=2025-12-20T00:00:00",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index",
+						"created-after"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2025-12-20T00:00:00"
+						}
+					]
+				},
+				"description": "Gets search indices created after a specific date"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Search Index",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"contentId\": \"post_123\",\n  \"contentType\": \"post\",\n  \"indexedText\": \"Introduction to Spring Boot and MongoDB integration. Learn how to build REST APIs with Spring Data MongoDB.\",\n  \"keywords\": [\n    \"spring\",\n    \"mongodb\",\n    \"rest\",\n    \"api\",\n    \"tutorial\"\n  ],\n  \"authorUsername\": \"john_doe\",\n  \"channel\": \"technology\",\n  \"searchScore\": 0.95\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/search-index",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index"
+					]
+				},
+				"description": "Creates a new search index document in MongoDB"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Another Search Index",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"contentId\": \"comment_456\",\n  \"contentType\": \"comment\",\n  \"indexedText\": \"Great tutorial! I used this approach in my project and it works perfectly. MongoDB is really powerful for document storage.\",\n  \"keywords\": [\n    \"mongodb\",\n    \"tutorial\",\n    \"project\",\n    \"document\"\n  ],\n  \"authorUsername\": \"jane_smith\",\n  \"channel\": \"technology\",\n  \"searchScore\": 0.78\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/search-index",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index"
+					]
+				},
+				"description": "Creates another search index for a comment"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Search Index by ID",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"contentId\": \"post_123\",\n  \"contentType\": \"post\",\n  \"indexedText\": \"Updated: Introduction to Spring Boot and MongoDB integration. Learn how to build scalable REST APIs with Spring Data MongoDB and best practices.\",\n  \"keywords\": [\n    \"spring\",\n    \"mongodb\",\n    \"rest\",\n    \"api\",\n    \"tutorial\",\n    \"scalable\",\n    \"best-practices\"\n  ],\n  \"authorUsername\": \"john_doe\",\n  \"channel\": \"technology\",\n  \"searchScore\": 0.98\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/search-index/REPLACE_WITH_ACTUAL_ID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index",
+						"REPLACE_WITH_ACTUAL_ID"
+					]
+				},
+				"description": "Updates an existing search index. Replace REPLACE_WITH_ACTUAL_ID with the actual MongoDB _id"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Search Index by ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/search-index/REPLACE_WITH_ACTUAL_ID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index",
+						"REPLACE_WITH_ACTUAL_ID"
+					]
+				},
+				"description": "Deletes a search index by ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Search Index by Content ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/search-index/content/post_123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"search-index",
+						"content",
+						"post_123"
+					]
+				},
+				"description": "Deletes a search index by content ID"
+			},
+			"response": []
+		}
+	]
+}
