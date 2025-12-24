@@ -23,8 +23,7 @@ public class Vote {
     private Users user;
     private Long contentId;
 
-    @Enumerated(EnumType.STRING)
-    private ContentType contentType;
+    private String contentType;
 
     private int voteValue; // +1 for upvote, -1 for downvote
 

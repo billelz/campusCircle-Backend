@@ -1,6 +1,5 @@
 package com.example.campusCircle;
 
-import com.example.campusCircle.model.ContentType;
 import com.example.campusCircle.model.Karma;
 import com.example.campusCircle.model.Vote;
 import com.example.campusCircle.repository.KarmaRepository;
@@ -44,7 +43,7 @@ class VotesAndKarmaTest {
         Vote vote = new Vote();
         vote.setUser(testUser);
         vote.setContentId(101L);
-        vote.setContentType(ContentType.POST);
+        vote.setContentType("POST");
         vote.setVoteValue(1);
         vote.setCreatedAt(LocalDateTime.now());
 
@@ -53,7 +52,7 @@ class VotesAndKarmaTest {
 
         Optional<Vote> retrievedVote = voteRepository.findById(savedVote.getId());
         assertTrue(retrievedVote.isPresent());
-        assertEquals(ContentType.POST, retrievedVote.get().getContentType());
+        assertEquals("POST", retrievedVote.get().getContentType());
         assertEquals(1, retrievedVote.get().getVoteValue());
         assertEquals(testUser.getId(), retrievedVote.get().getUser().getId());
     }
