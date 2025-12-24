@@ -1,18 +1,13 @@
 package com.example.campusCircle.model;
 
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "blocks", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"blocker_user_id", "blocked_username"})
-})
+@Table(name = "blocks")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Block {
 
     @Id
@@ -20,6 +15,6 @@ public class Block {
     private Long id;
 
     private Long blockerUserId;
+
     private String blockedUsername;
 }
-
