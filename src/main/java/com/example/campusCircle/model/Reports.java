@@ -17,9 +17,19 @@ public class Reports {
     private Long id;
 
     private Long contentId;
+
+    @ManyToOne
+    @JoinColumn(name = "reporter_user_id", insertable = false, updatable = false)
+    private Users reporter;
+
     private Long reporterUserId;
     private String reason;
     private String status;
+
+    @ManyToOne
+    @JoinColumn(name = "resolved_by", referencedColumnName = "username", insertable = false, updatable = false)
+    private Users resolver;
+
     private String resolvedBy;
     private String resolution;
 }
