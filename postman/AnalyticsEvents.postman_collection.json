@@ -12,10 +12,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8083/api/analytics-events/test",
+					"raw": "http://localhost:8081/api/analytics-events/test",
 					"protocol": "http",
 					"host": ["localhost"],
-					"port": "8083",
+					"port": "8081",
 					"path": ["api", "analytics-events", "test"]
 				}
 			}
@@ -26,10 +26,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8083/api/analytics-events",
+					"raw": "http://localhost:8081/api/analytics-events",
 					"protocol": "http",
 					"host": ["localhost"],
-					"port": "8083",
+					"port": "8081",
 					"path": ["api", "analytics-events"]
 				}
 			}
@@ -49,10 +49,10 @@
 					"raw": "{\n  \"eventType\": \"post_view\",\n  \"usernameHashed\": \"hash123abc\",\n  \"metadata\": {\n    \"postId\": \"post123\",\n    \"duration\": 45,\n    \"source\": \"feed\"\n  }\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8083/api/analytics-events",
+					"raw": "http://localhost:8081/api/analytics-events",
 					"protocol": "http",
 					"host": ["localhost"],
-					"port": "8083",
+					"port": "8081",
 					"path": ["api", "analytics-events"]
 				}
 			}
@@ -63,10 +63,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8083/api/analytics-events/type/post_view",
+					"raw": "http://localhost:8081/api/analytics-events/type/post_view",
 					"protocol": "http",
 					"host": ["localhost"],
-					"port": "8083",
+					"port": "8081",
 					"path": ["api", "analytics-events", "type", "post_view"]
 				}
 			}
@@ -77,10 +77,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8083/api/analytics-events/user/hash123abc",
+					"raw": "http://localhost:8081/api/analytics-events/user/hash123abc",
 					"protocol": "http",
 					"host": ["localhost"],
-					"port": "8083",
+					"port": "8081",
 					"path": ["api", "analytics-events", "user", "hash123abc"]
 				}
 			}
@@ -91,10 +91,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8083/api/analytics-events/count/post_view",
+					"raw": "http://localhost:8081/api/analytics-events/count/post_view",
 					"protocol": "http",
 					"host": ["localhost"],
-					"port": "8083",
+					"port": "8081",
 					"path": ["api", "analytics-events", "count", "post_view"]
 				}
 			}
