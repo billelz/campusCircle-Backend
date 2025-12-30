@@ -1,6 +1,5 @@
 package com.example.campusCircle.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,11 +19,14 @@ public class Post {
     private Long id;
 
     private String authorUsername;
-    private Long channelId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "channel_id", nullable = false)
+    private Channel channel;
+
     private String title;
     private LocalDateTime createdAt;
     private LocalDateTime editedAt;
     private LocalDateTime deletedAt;
-
 }
 
