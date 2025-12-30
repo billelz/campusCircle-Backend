@@ -1,18 +1,17 @@
 package com.example.campusCircle.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "posts")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Post {
 
     @Id
@@ -20,14 +19,14 @@ public class Post {
     private Long id;
 
     private String authorUsername;
-    private Long channelId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "channel_id", nullable = false)
+    private Channel channel;
+
     private String title;
     private LocalDateTime createdAt;
     private LocalDateTime editedAt;
     private LocalDateTime deletedAt;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Comment> comments;
-
 }
+
