@@ -1,0 +1,103 @@
+{
+	"info": {
+		"_postman_id": "analytics-events-collection",
+		"name": "Analytics Events API",
+		"description": "API endpoints for Analytics Events collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test Connection",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/analytics-events/test",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["api", "analytics-events", "test"]
+				}
+			}
+		},
+		{
+			"name": "Get All Events",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/analytics-events",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["api", "analytics-events"]
+				}
+			}
+		},
+		{
+			"name": "Create Event",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"eventType\": \"post_view\",\n  \"usernameHashed\": \"hash123abc\",\n  \"metadata\": {\n    \"postId\": \"post123\",\n    \"duration\": 45,\n    \"source\": \"feed\"\n  }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/analytics-events",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["api", "analytics-events"]
+				}
+			}
+		},
+		{
+			"name": "Get Events by Type",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/analytics-events/type/post_view",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["api", "analytics-events", "type", "post_view"]
+				}
+			}
+		},
+		{
+			"name": "Get Events by User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/analytics-events/user/hash123abc",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["api", "analytics-events", "user", "hash123abc"]
+				}
+			}
+		},
+		{
+			"name": "Count Events by Type",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/analytics-events/count/post_view",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8081",
+					"path": ["api", "analytics-events", "count", "post_view"]
+				}
+			}
+		}
+	]
+}
