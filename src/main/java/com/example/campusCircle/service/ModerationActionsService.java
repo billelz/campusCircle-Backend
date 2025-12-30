@@ -21,7 +21,8 @@ public class ModerationActionsService {
     }
 
     public ModerationActions getModerationAction(Long id) {
-        return moderationActionsRepository.findById(id).orElseThrow(() -> new RuntimeException("Moderation action not found"));
+        return moderationActionsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Moderation action not found"));
     }
 
     public List<ModerationActions> getAllModerationActions() {

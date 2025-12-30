@@ -18,8 +18,13 @@ public class ModerationActions {
 
     private String actionType;
     private Long contentId;
+
+    @ManyToOne
+    @JoinColumn(name = "moderator_username", referencedColumnName = "username", insertable = false, updatable = false)
+    private Users moderator;
+
     private String moderatorUsername;
     private String reason;
-    
+
     private java.time.LocalDateTime timestamp;
 }
