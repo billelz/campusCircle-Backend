@@ -16,10 +16,17 @@ public class ModerationActions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "action_type")
     private String actionType;
+
+    @Column(name = "content_id")
     private Long contentId;
-    private String moderatorUsername;
+
+    @ManyToOne
+    @JoinColumn(name = "moderator_username", referencedColumnName = "username")
+    private Users moderator;
+
     private String reason;
-    
+
     private java.time.LocalDateTime timestamp;
 }
