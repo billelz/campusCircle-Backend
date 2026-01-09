@@ -1,0 +1,1814 @@
+{
+  "info": {
+    "name": "CampusCircle Full API Collection",
+    "description": "Complete API collection for CampusCircle backend - includes all endpoints for authentication, users, posts, comments, channels, messaging, notifications, and more.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "description": "User authentication endpoints - register, login, token refresh, password management",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('accessToken', jsonData.accessToken);",
+                  "    pm.collectionVariables.set('refreshToken', jsonData.refreshToken);",
+                  "    pm.collectionVariables.set('userId', jsonData.user.id);",
+                  "    pm.collectionVariables.set('username', jsonData.user.username);",
+                  "    pm.test('Registration successful', function () {",
+                  "        pm.expect(jsonData.accessToken).to.not.be.empty;",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"testuser@university.edu\",\n    \"password\": \"password123\",\n    \"realName\": \"Test User\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('accessToken', jsonData.accessToken);",
+                  "    pm.collectionVariables.set('refreshToken', jsonData.refreshToken);",
+                  "    pm.collectionVariables.set('userId', jsonData.user.id);",
+                  "    pm.collectionVariables.set('username', jsonData.user.username);",
+                  "    pm.test('Login successful', function () {",
+                  "        pm.expect(jsonData.accessToken).to.not.be.empty;",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"usernameOrEmail\": \"testuser\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('accessToken', jsonData.accessToken);",
+                  "    pm.collectionVariables.set('refreshToken', jsonData.refreshToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "refresh"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"currentPassword\": \"password123\",\n    \"newPassword\": \"newPassword456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "change-password"]
+            }
+          }
+        },
+        {
+          "name": "Check Username Availability",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/check-username/testuser",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "check-username", "testuser"]
+            }
+          }
+        },
+        {
+          "name": "Check Email Availability",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/check-email/test@university.edu",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "check-email", "test@university.edu"]
+            }
+          }
+        },
+        {
+          "name": "Validate Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/validate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "validate"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 Users",
+      "description": "User management endpoints",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"newuser\",\n    \"email\": \"newuser@university.edu\",\n    \"passwordHash\": \"hashedpassword\",\n    \"realName\": \"New User\",\n    \"verificationStatus\": \"PENDING\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"realName\": \"Updated Name\",\n    \"profileVisibilitySettings\": \"PUBLIC\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{userId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📝 Posts",
+      "description": "Post management endpoints",
+      "item": [
+        {
+          "name": "Get All Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/posts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts"]
+            }
+          }
+        },
+        {
+          "name": "Get Post by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"My First Post\",\n    \"postType\": \"TEXT\",\n    \"isAnonymous\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/posts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts"]
+            }
+          }
+        },
+        {
+          "name": "Update Post",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Updated Post Title\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📄 Post Content (MongoDB)",
+      "description": "Post content stored in MongoDB",
+      "item": [
+        {
+          "name": "Get All Post Contents",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/post-content",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "post-content"]
+            }
+          }
+        },
+        {
+          "name": "Get Post Content by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/post-content/postId/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "post-content", "postId", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Post Content",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"postId\": 1,\n    \"textContent\": \"This is my first post content!\",\n    \"mediaUrls\": [],\n    \"tags\": [\"introduction\", \"hello\"],\n    \"version\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/post-content",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "post-content"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "💬 Comments",
+      "description": "Comment management endpoints",
+      "item": [
+        {
+          "name": "Get All Comments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/comments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "comments"]
+            }
+          }
+        },
+        {
+          "name": "Get Comment by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/comments/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "comments", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Comment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"isAnonymous\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/comments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "comments"]
+            }
+          }
+        },
+        {
+          "name": "Update Comment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"isAnonymous\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/comments/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "comments", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Comment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/comments/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "comments", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📺 Channels",
+      "description": "Channel management endpoints",
+      "item": [
+        {
+          "name": "Get All Channels",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/channels",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "channels"]
+            }
+          }
+        },
+        {
+          "name": "Get Channel by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/channels/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "channels", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Channels by University",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/channels/university/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "channels", "university", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Channels by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/channels/category/ACADEMIC",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "channels", "category", "ACADEMIC"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Channels",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/channels/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "channels", "active"]
+            }
+          }
+        },
+        {
+          "name": "Search Channels",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/channels/search?name=general",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "channels", "search"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "general"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Channel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"General Discussion\",\n    \"description\": \"A channel for general discussions\",\n    \"category\": \"SOCIAL\",\n    \"isActive\": true,\n    \"isPrivate\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/channels",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "channels"]
+            }
+          }
+        },
+        {
+          "name": "Update Channel",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"description\": \"Updated channel description\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/channels/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "channels", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Channel",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/channels/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "channels", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📬 Subscriptions",
+      "description": "Channel subscription endpoints",
+      "item": [
+        {
+          "name": "Get All Subscriptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/subscriptions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subscriptions"]
+            }
+          }
+        },
+        {
+          "name": "Get User Subscriptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/subscriptions/user/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subscriptions", "user", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Channel Subscribers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/subscriptions/channel/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subscriptions", "channel", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Subscriber Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/subscriptions/channel/1/count",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subscriptions", "channel", "1", "count"]
+            }
+          }
+        },
+        {
+          "name": "Check If Subscribed",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/subscriptions/check?userId={{userId}}&channelId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subscriptions", "check"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{userId}}"
+                },
+                {
+                  "key": "channelId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Subscribe to Channel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userId\": {{userId}},\n    \"channelId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/subscriptions/subscribe",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subscriptions", "subscribe"]
+            }
+          }
+        },
+        {
+          "name": "Unsubscribe from Channel",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/subscriptions/unsubscribe?userId={{userId}}&channelId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "subscriptions", "unsubscribe"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{userId}}"
+                },
+                {
+                  "key": "channelId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👍 Votes",
+      "description": "Voting endpoints for posts and comments",
+      "item": [
+        {
+          "name": "Vote on Content",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userId\": {{userId}},\n    \"contentId\": 1,\n    \"contentType\": \"POST\",\n    \"voteValue\": 1,\n    \"authorUserId\": 2,\n    \"channelId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/votes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "votes"]
+            }
+          }
+        },
+        {
+          "name": "Get User Vote on Content",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/votes/user/{{userId}}/content/1/type/POST",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "votes", "user", "{{userId}}", "content", "1", "type", "POST"]
+            }
+          }
+        },
+        {
+          "name": "Get Vote Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/votes/count/1/type/POST",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "votes", "count", "1", "type", "POST"]
+            }
+          }
+        },
+        {
+          "name": "Remove Vote",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/votes/user/{{userId}}/content/1/type/POST",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "votes", "user", "{{userId}}", "content", "1", "type", "POST"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "✉️ Direct Messages (MongoDB)",
+      "description": "Direct messaging endpoints",
+      "item": [
+        {
+          "name": "Get All Conversations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/direct-messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "direct-messages"]
+            }
+          }
+        },
+        {
+          "name": "Get User Conversations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/direct-messages/user/{{username}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "direct-messages", "user", "{{username}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Conversation Between Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/direct-messages/between?user1={{username}}&user2=otheruser",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "direct-messages", "between"],
+              "query": [
+                {
+                  "key": "user1",
+                  "value": "{{username}}"
+                },
+                {
+                  "key": "user2",
+                  "value": "otheruser"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Unread Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/direct-messages/user/{{username}}/unread-count",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "direct-messages", "user", "{{username}}", "unread-count"]
+            }
+          }
+        },
+        {
+          "name": "Start Conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user1\": \"{{username}}\",\n    \"user2\": \"otheruser\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/direct-messages/start",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "direct-messages", "start"]
+            }
+          }
+        },
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"senderUsername\": \"{{username}}\",\n    \"recipientUsername\": \"otheruser\",\n    \"text\": \"Hello! How are you?\",\n    \"mediaUrls\": []\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/direct-messages/send",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "direct-messages", "send"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔔 Notifications (MongoDB)",
+      "description": "Notification endpoints",
+      "item": [
+        {
+          "name": "Get All Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications"]
+            }
+          }
+        },
+        {
+          "name": "Get User Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/user/{{username}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "user", "{{username}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Unread Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/user/{{username}}/unread",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "user", "{{username}}", "unread"]
+            }
+          }
+        },
+        {
+          "name": "Get Unread Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/user/{{username}}/unread-count",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "user", "{{username}}", "unread-count"]
+            }
+          }
+        },
+        {
+          "name": "Send Notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"recipientUsername\": \"{{username}}\",\n    \"recipientUserId\": {{userId}},\n    \"type\": \"LIKE\",\n    \"title\": \"New Like\",\n    \"message\": \"Someone liked your post!\",\n    \"senderUsername\": \"otheruser\",\n    \"contentReference\": {\n        \"type\": \"POST\",\n        \"id\": \"1\"\n    },\n    \"metadata\": {}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/send",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "send"]
+            }
+          }
+        },
+        {
+          "name": "Mark as Read",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/notifications/{{notificationId}}/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "notifications", "{{notificationId}}", "read"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏅 Badges",
+      "description": "Badge management endpoints",
+      "item": [
+        {
+          "name": "Get All Badges",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/badges",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "badges"]
+            }
+          }
+        },
+        {
+          "name": "Get User Badges",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/badges/user/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "badges", "user", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Check If User Has Badge",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/badges/user/{{userId}}/has/NEWCOMER",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "badges", "user", "{{userId}}", "has", "NEWCOMER"]
+            }
+          }
+        },
+        {
+          "name": "Get All Badge Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/badges/types",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "badges", "types"]
+            }
+          }
+        },
+        {
+          "name": "Award Badge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userId\": {{userId}},\n    \"badgeType\": \"NEWCOMER\",\n    \"channelId\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/badges/award",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "badges", "award"]
+            }
+          }
+        },
+        {
+          "name": "Check and Award Karma Badges",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/badges/check-karma/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "badges", "check-karma", "{{userId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "⭐ Karma",
+      "description": "Karma tracking endpoints",
+      "item": [
+        {
+          "name": "Get All Karma",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/karma",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "karma"]
+            }
+          }
+        },
+        {
+          "name": "Get User Karma",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/karma/user/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "karma", "user", "{{userId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔖 Saved Posts (MongoDB)",
+      "description": "Saved posts endpoints",
+      "item": [
+        {
+          "name": "Get All Saved Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/saved-posts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "saved-posts"]
+            }
+          }
+        },
+        {
+          "name": "Get User Saved Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/saved-posts/user/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "saved-posts", "user", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Saved Posts by Folder",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/saved-posts/user/{{userId}}/folder/default",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "saved-posts", "user", "{{userId}}", "folder", "default"]
+            }
+          }
+        },
+        {
+          "name": "Check If Post Saved",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/saved-posts/check?userId={{userId}}&postId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "saved-posts", "check"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{userId}}"
+                },
+                {
+                  "key": "postId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Save Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userId\": {{userId}},\n    \"username\": \"{{username}}\",\n    \"postId\": 1,\n    \"postTitle\": \"Interesting Post\",\n    \"channelId\": 1,\n    \"channelName\": \"General\",\n    \"folder\": \"default\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/saved-posts/save",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "saved-posts", "save"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚙️ User Preferences (MongoDB)",
+      "description": "User preferences endpoints",
+      "item": [
+        {
+          "name": "Get All Preferences",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user-preferences",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user-preferences"]
+            }
+          }
+        },
+        {
+          "name": "Get User Preferences by User ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user-preferences/user/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user-preferences", "user", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create/Update Preferences",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userId\": {{userId}},\n    \"darkMode\": true,\n    \"language\": \"en\",\n    \"notificationsEnabled\": true,\n    \"emailNotifications\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/user-preferences",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user-preferences"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 User Activity (MongoDB)",
+      "description": "User activity tracking endpoints",
+      "item": [
+        {
+          "name": "Get All Activities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user-activity",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user-activity"]
+            }
+          }
+        },
+        {
+          "name": "Get User Activity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/user-activity/user/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user-activity", "user", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Log Activity",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userId\": {{userId}},\n    \"activityType\": \"LOGIN\",\n    \"description\": \"User logged in\",\n    \"metadata\": {}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/user-activity",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user-activity"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔥 Trending Cache (MongoDB)",
+      "description": "Trending content endpoints",
+      "item": [
+        {
+          "name": "Get All Trending",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/trending",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "trending"]
+            }
+          }
+        },
+        {
+          "name": "Get Trending by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/trending/category/POSTS",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "trending", "category", "POSTS"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔍 Search Index (MongoDB)",
+      "description": "Search index endpoints",
+      "item": [
+        {
+          "name": "Search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/search?q=test&type=POST",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "test"
+                },
+                {
+                  "key": "type",
+                  "value": "POST"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛡️ Moderation",
+      "description": "Moderation queue and actions endpoints",
+      "item": [
+        {
+          "name": "Get Moderation Queue",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/moderation-queue",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "moderation-queue"]
+            }
+          }
+        },
+        {
+          "name": "Get Pending Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/moderation-queue/pending",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "moderation-queue", "pending"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📈 Analytics (MongoDB)",
+      "description": "Analytics event endpoints",
+      "item": [
+        {
+          "name": "Get All Events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "analytics"]
+            }
+          }
+        },
+        {
+          "name": "Track Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"eventType\": \"PAGE_VIEW\",\n    \"userId\": {{userId}},\n    \"sessionId\": \"session123\",\n    \"metadata\": {\n        \"page\": \"home\"\n    }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "analytics"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🚫 Bans",
+      "description": "Ban management endpoints",
+      "item": [
+        {
+          "name": "Get All Bans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bans",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bans"]
+            }
+          }
+        },
+        {
+          "name": "Check If User Banned",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bans/check?userId={{userId}}&channelId=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bans", "check"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{userId}}"
+                },
+                {
+                  "key": "channelId",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "✅ Verification",
+      "description": "User verification endpoints",
+      "item": [
+        {
+          "name": "Get All Verifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/verification",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "verification"]
+            }
+          }
+        },
+        {
+          "name": "Get User Verification",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/verification/user/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "verification", "user", "{{userId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🌐 Online Status & WebSocket",
+      "description": "WebSocket online status REST endpoints and WebSocket testing documentation.\n\n⚠️ NOTE: Postman doesn't support STOMP WebSocket natively. Use the REST endpoints below to check online status, and refer to the WebSocket Testing Guide folder for manual testing instructions.\n\n📡 WebSocket Endpoint: ws://localhost:8081/ws\n🔐 Authentication: Pass JWT token as query param or in STOMP headers",
+      "item": [
+        {
+          "name": "📋 REST Endpoints",
+          "description": "REST API endpoints for online status management",
+          "item": [
+            {
+              "name": "Get Online Users",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/online-status/users",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "online-status", "users"]
+                },
+                "description": "Get list of all currently online users"
+              }
+            },
+            {
+              "name": "Get Online Count",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/online-status/count",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "online-status", "count"]
+                },
+                "description": "Get total count of online users"
+              }
+            },
+            {
+              "name": "Check If User Online",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/online-status/check/{{username}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "online-status", "check", "{{username}}"]
+                },
+                "description": "Check if a specific user is currently online"
+              }
+            },
+            {
+              "name": "Check Multiple Users Online",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\"user1\", \"user2\", \"testuser\"]"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/online-status/check-multiple",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "online-status", "check-multiple"]
+                },
+                "description": "Check online status for multiple users at once"
+              }
+            }
+          ]
+        },
+        {
+          "name": "📡 WebSocket Testing Guide",
+          "description": "Since Postman doesn't support STOMP WebSocket, use these alternative testing methods",
+          "item": [
+            {
+              "name": "📖 WebSocket Connection Info",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/online-status/count",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "online-status", "count"]
+                },
+                "description": "📡 WEBSOCKET CONNECTION INFO\n================================\n\n🔗 WebSocket URL: ws://localhost:8081/ws\n🔗 With SockJS: http://localhost:8081/ws\n\n🔐 AUTHENTICATION\n-----------------\nPass JWT token as query parameter:\nws://localhost:8081/ws?token=YOUR_JWT_TOKEN\n\nOr in STOMP CONNECT frame headers:\n{\n  \"Authorization\": \"Bearer YOUR_JWT_TOKEN\"\n}\n\n📨 MESSAGE DESTINATIONS\n-----------------------\n\n1️⃣ CHANNEL MESSAGES\nSubscribe: /topic/channel/{channelId}\nSend: /app/channel/{channelId}/message\nPayload:\n{\n  \"content\": \"Hello everyone!\",\n  \"channelId\": 1,\n  \"senderId\": 1\n}\n\n2️⃣ DIRECT MESSAGES\nSubscribe: /user/queue/messages\nSend: /app/direct-message\nPayload:\n{\n  \"content\": \"Hey there!\",\n  \"senderId\": 1,\n  \"receiverId\": 2\n}\n\n3️⃣ TYPING INDICATORS\nSubscribe: /topic/channel/{channelId}/typing\nSend: /app/channel/{channelId}/typing\nPayload:\n{\n  \"username\": \"john_doe\",\n  \"typing\": true\n}\n\n4️⃣ NOTIFICATIONS\nSubscribe: /user/queue/notifications\n(Server-sent only)\n\n5️⃣ ONLINE STATUS\nSubscribe: /topic/online-status\n(Broadcasts when users connect/disconnect)\n\n💡 TIP: Use this request to verify the server is running before WebSocket testing"
+              }
+            },
+            {
+              "name": "🌐 Browser Console Test Script",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/online-status/users",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "online-status", "users"]
+                },
+                "description": "🌐 BROWSER CONSOLE WEBSOCKET TEST\n==================================\n\nOpen browser DevTools (F12) and paste this script:\n\n```javascript\n// First, get a JWT token\nconst authResponse = await fetch('http://localhost:8081/api/auth/login', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({\n    usernameOrEmail: 'testuser',\n    password: 'password123'\n  })\n});\nconst { accessToken } = await authResponse.json();\nconsole.log('Got token:', accessToken);\n\n// Load SockJS and STOMP\nconst sockjsScript = document.createElement('script');\nsockjsScript.src = 'https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js';\ndocument.head.appendChild(sockjsScript);\n\nconst stompScript = document.createElement('script');\nstompScript.src = 'https://cdn.jsdelivr.net/npm/@stomp/stompjs@7/bundles/stomp.umd.min.js';\ndocument.head.appendChild(stompScript);\n\n// Wait for scripts to load, then connect\nsetTimeout(() => {\n  const client = new StompJs.Client({\n    webSocketFactory: () => new SockJS('http://localhost:8081/ws?token=' + accessToken),\n    debug: (str) => console.log('STOMP:', str),\n    onConnect: () => {\n      console.log('✅ Connected!');\n      \n      // Subscribe to channel 1\n      client.subscribe('/topic/channel/1', (message) => {\n        console.log('📨 Channel message:', JSON.parse(message.body));\n      });\n      \n      // Subscribe to personal messages\n      client.subscribe('/user/queue/messages', (message) => {\n        console.log('📬 Direct message:', JSON.parse(message.body));\n      });\n      \n      // Subscribe to notifications\n      client.subscribe('/user/queue/notifications', (message) => {\n        console.log('🔔 Notification:', JSON.parse(message.body));\n      });\n      \n      // Send a test message\n      client.publish({\n        destination: '/app/channel/1/message',\n        body: JSON.stringify({\n          content: 'Hello from browser!',\n          channelId: 1,\n          senderId: 1\n        })\n      });\n    },\n    onStompError: (frame) => {\n      console.error('❌ STOMP error:', frame.headers['message']);\n    }\n  });\n  client.activate();\n  window.stompClient = client; // Save reference\n}, 2000);\n```\n\n📝 After running, use:\n- window.stompClient.publish({...}) to send messages\n- window.stompClient.deactivate() to disconnect"
+              }
+            },
+            {
+              "name": "🟢 Node.js Test Script",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/online-status/count",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "online-status", "count"]
+                },
+                "description": "🟢 NODE.JS WEBSOCKET TEST SCRIPT\n=================================\n\n1️⃣ Install dependencies:\nnpm install @stomp/stompjs sockjs-client ws node-fetch\n\n2️⃣ Create test-websocket.js:\n\n```javascript\nconst { Client } = require('@stomp/stompjs');\nconst SockJS = require('sockjs-client');\nconst fetch = require('node-fetch');\nObject.assign(global, { WebSocket: require('ws') });\n\nasync function testWebSocket() {\n  // Get JWT token\n  const response = await fetch('http://localhost:8081/api/auth/login', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({\n      usernameOrEmail: 'testuser',\n      password: 'password123'\n    })\n  });\n  const { accessToken } = await response.json();\n  console.log('🔑 Got token');\n\n  const client = new Client({\n    webSocketFactory: () => new SockJS(`http://localhost:8081/ws?token=${accessToken}`),\n    debug: (str) => console.log('STOMP:', str),\n    onConnect: () => {\n      console.log('✅ Connected to WebSocket!');\n      \n      // Subscribe to channels\n      client.subscribe('/topic/channel/1', (msg) => {\n        console.log('📨 Received:', JSON.parse(msg.body));\n      });\n      \n      client.subscribe('/user/queue/messages', (msg) => {\n        console.log('📬 DM:', JSON.parse(msg.body));\n      });\n      \n      // Send test message\n      setTimeout(() => {\n        client.publish({\n          destination: '/app/channel/1/message',\n          body: JSON.stringify({\n            content: 'Hello from Node.js!',\n            channelId: 1,\n            senderId: 1\n          })\n        });\n        console.log('📤 Message sent!');\n      }, 1000);\n    },\n    onStompError: (frame) => {\n      console.error('❌ Error:', frame.headers['message']);\n    }\n  });\n\n  client.activate();\n}\n\ntestWebSocket();\n```\n\n3️⃣ Run:\nnode test-websocket.js"
+              }
+            },
+            {
+              "name": "🔧 wscat Test Commands",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/online-status/users",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "online-status", "users"]
+                },
+                "description": "🔧 WSCAT WEBSOCKET TESTING\n==========================\n\n1️⃣ Install wscat:\nnpm install -g wscat\n\n2️⃣ Connect (for basic WebSocket without STOMP):\nwscat -c \"ws://localhost:8081/ws?token=YOUR_JWT_TOKEN\"\n\n⚠️ NOTE: wscat works with raw WebSocket but our server uses STOMP protocol.\nFor STOMP testing, use the Browser Console or Node.js scripts.\n\n3️⃣ Alternative - Use Apic WebSocket Client:\n- Download from: https://apic.app/\n- Supports STOMP protocol\n- GUI-based testing\n\n4️⃣ Alternative - Use websocat:\ncargo install websocat\nwebsocat ws://localhost:8081/ws?token=YOUR_TOKEN\n\n📋 STOMP FRAME FORMAT\n--------------------\nCONNECT frame:\nCONNECT\naccept-version:1.2\nhost:localhost\nAuthorization:Bearer YOUR_TOKEN\n\n^@\n\nSUBSCRIBE frame:\nSUBSCRIBE\nid:sub-0\ndestination:/topic/channel/1\n\n^@\n\nSEND frame:\nSEND\ndestination:/app/channel/1/message\ncontent-type:application/json\n\n{\"content\":\"Hello\",\"channelId\":1,\"senderId\":1}\n^@\n\n(^@ is the NULL character, Ctrl+@)"
+              }
+            }
+          ]
+        },
+        {
+          "name": "📬 Direct Messages API",
+          "description": "REST endpoints for direct messages (alternative to WebSocket)",
+          "item": [
+            {
+              "name": "Get Conversation",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/direct-messages/conversation?senderId={{userId}}&receiverId=2",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "direct-messages", "conversation"],
+                  "query": [
+                    {
+                      "key": "senderId",
+                      "value": "{{userId}}"
+                    },
+                    {
+                      "key": "receiverId",
+                      "value": "2"
+                    }
+                  ]
+                },
+                "description": "Get all messages between two users"
+              }
+            },
+            {
+              "name": "Get User Conversations List",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/direct-messages/conversations/{{userId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "direct-messages", "conversations", "{{userId}}"]
+                },
+                "description": "Get list of all conversations for a user"
+              }
+            },
+            {
+              "name": "Send Direct Message (REST)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"content\": \"Hello via REST API!\",\n    \"senderId\": {{userId}},\n    \"receiverId\": 2\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/direct-messages",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "direct-messages"]
+                },
+                "description": "Send a direct message using REST API (alternative to WebSocket)"
+              }
+            },
+            {
+              "name": "Get Unread Count",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/direct-messages/unread/{{userId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "direct-messages", "unread", "{{userId}}"]
+                },
+                "description": "Get count of unread messages for a user"
+              }
+            },
+            {
+              "name": "Mark Messages as Read",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/direct-messages/read?senderId=2&receiverId={{userId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "direct-messages", "read"],
+                  "query": [
+                    {
+                      "key": "senderId",
+                      "value": "2"
+                    },
+                    {
+                      "key": "receiverId",
+                      "value": "{{userId}}"
+                    }
+                  ]
+                },
+                "description": "Mark all messages from a sender as read"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

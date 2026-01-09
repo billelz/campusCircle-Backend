@@ -46,4 +46,18 @@ public class ChannelService {
     public void deleteChannel(Long id) {
         ChannelRepository.deleteById(id);
     }
+
+    public void incrementSubscriberCount(Long channelId) {
+        Channel channel = getChannel(channelId);
+        channel.setSubscriberCount(channel.getSubscriberCount() + 1);
+        ChannelRepository.save(channel);
+    }
+
+    public void decrementSubscriberCount(Long channelId) {
+        Channel channel = getChannel(channelId);
+        if (channel.getSubscriberCount() > 0) {
+            channel.setSubscriberCount(channel.getSubscriberCount() - 1);
+            ChannelRepository.save(channel);
+        }
+    }
 }
