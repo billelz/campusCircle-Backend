@@ -89,7 +89,7 @@ public class AuthController {
                     .realName(user.getRealName())
                     .universityId(user.getUniversity() != null ? user.getUniversity().getId() : null)
                     .universityName(user.getUniversity() != null ? user.getUniversity().getName() : null)
-                    .verificationStatus(user.getVerificationStatus())
+                    .verificationStatus(user.getVerificationStatus() != null ? user.getVerificationStatus().name() : null)
                     .build();
 
             return ResponseEntity.ok(userInfo);

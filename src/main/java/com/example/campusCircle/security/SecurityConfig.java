@@ -55,10 +55,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/trending/**").permitAll()
                         .requestMatchers("/api/search/**").permitAll()
                         .requestMatchers("/api/search-index/**").permitAll()
-                        // Public read for channels and posts
+                        // Public read for channels, posts, and leaderboard
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/channels/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/posts/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/subscriptions/channel/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/karma/leaderboard").permitAll()
                         // WebSocket endpoints
                         .requestMatchers("/ws/**").permitAll()
                         // Online status (public read)

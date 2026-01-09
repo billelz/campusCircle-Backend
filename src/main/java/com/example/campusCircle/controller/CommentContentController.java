@@ -1,6 +1,6 @@
 package com.example.campusCircle.controller;
 
-import com.example.campusCircle.model.nosql.CommentContent;
+import com.example.campusCircle.model.CommentContent;
 import com.example.campusCircle.service.CommentContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,7 +49,7 @@ public class CommentContentController {
     }
 
     @GetMapping("/comment/{commentId}")
-    public ResponseEntity<CommentContent> getCommentByCommentId(@PathVariable String commentId) {
+    public ResponseEntity<CommentContent> getCommentByCommentId(@PathVariable Long commentId) {
         return commentContentService.getCommentByCommentId(commentId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -82,7 +82,7 @@ public class CommentContentController {
     }
 
     @DeleteMapping("/comment/{commentId}")
-    public ResponseEntity<Void> deleteCommentByCommentId(@PathVariable String commentId) {
+    public ResponseEntity<Void> deleteCommentByCommentId(@PathVariable Long commentId) {
         commentContentService.deleteCommentByCommentId(commentId);
         return ResponseEntity.noContent().build();
     }

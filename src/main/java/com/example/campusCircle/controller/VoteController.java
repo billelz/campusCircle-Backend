@@ -1,9 +1,13 @@
 package com.example.campusCircle.controller;
 
 import com.example.campusCircle.model.Vote;
+import com.example.campusCircle.model.Users;
 import com.example.campusCircle.service.VoteService;
+import com.example.campusCircle.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -17,12 +21,47 @@ public class VoteController {
     @Autowired
     private VoteService voteService;
 
+    @Autowired
+    private UsersService usersService;
+
     @PostMapping
     public ResponseEntity<Map<String, Object>> vote(@RequestBody VoteRequest request) {
+        // Get authenticated user's ID if not provided
+        Long userId = request.getUserId();
+        if (userId == null) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+                try {
+                    Users currentUser = usersService.getUserByUsername(auth.getName());
+                    userId = currentUser.getId();
+                } catch (Exception e) {
+                    return ResponseEntity.badRequest().body(Map.of("error", "User not found"));
+                }
+            }
+        }
+
+        if (userId == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "User ID required"));
+        }
+
+        // Parse content type from string if needed
+        Vote.ContentType contentType = request.getContentType();
+        if (contentType == null && request.getContentTypeString() != null) {
+            try {
+                contentType = Vote.ContentType.valueOf(request.getContentTypeString().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Invalid content type"));
+            }
+        }
+
+        if (contentType == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Content type required"));
+        }
+
         Vote vote = voteService.vote(
-                request.getUserId(),
+                userId,
                 request.getContentId(),
-                request.getContentType(),
+                contentType,
                 request.getVoteValue(),
                 request.getAuthorUserId(),
                 request.getChannelId()
@@ -36,7 +75,7 @@ public class VoteController {
             response.put("status", "removed");
             response.put("message", "Vote removed");
         }
-        response.put("newVoteCount", voteService.getVoteCount(request.getContentId(), request.getContentType()));
+        response.put("newVoteCount", voteService.getVoteCount(request.getContentId(), contentType));
         
         return ResponseEntity.ok(response);
     }
@@ -78,6 +117,7 @@ public class VoteController {
         private Long userId;
         private Long contentId;
         private Vote.ContentType contentType;
+        private String contentTypeString; // For string-based content type from mobile
         private int voteValue;
         private Long authorUserId;
         private Long channelId;
@@ -88,6 +128,8 @@ public class VoteController {
         public void setContentId(Long contentId) { this.contentId = contentId; }
         public Vote.ContentType getContentType() { return contentType; }
         public void setContentType(Vote.ContentType contentType) { this.contentType = contentType; }
+        public String getContentTypeString() { return contentTypeString; }
+        public void setContentTypeString(String contentTypeString) { this.contentTypeString = contentTypeString; }
         public int getVoteValue() { return voteValue; }
         public void setVoteValue(int voteValue) { this.voteValue = voteValue; }
         public Long getAuthorUserId() { return authorUserId; }

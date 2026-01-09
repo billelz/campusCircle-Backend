@@ -1,6 +1,6 @@
 package com.example.campusCircle.repository;
 
-import com.example.campusCircle.model.nosql.CommentContent;
+import com.example.campusCircle.model.CommentContent;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,9 +10,14 @@ import java.util.Optional;
 @Repository
 public interface CommentContentRepository extends MongoRepository<CommentContent, String> {
 
-    Optional<CommentContent> findByCommentId(String commentId);
+    Optional<CommentContent> findByCommentId(Long commentId);
 
-    List<CommentContent> findByBodyTextContaining(String keyword);
+    List<CommentContent> findByContentContaining(String keyword);
 
-    void deleteByCommentId(String commentId);
+    void deleteByCommentId(Long commentId);
+
+    // Alias for search functionality
+    default List<CommentContent> findByBodyTextContaining(String keyword) {
+        return findByContentContaining(keyword);
+    }
 }

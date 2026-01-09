@@ -5,11 +5,14 @@ import com.example.campusCircle.service.DirectMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/direct-messages")
@@ -22,6 +25,17 @@ public class DirectMessageController {
     @GetMapping
     public ResponseEntity<List<DirectMessage>> getAllConversations() {
         return ResponseEntity.ok(directMessageService.getAllConversations());
+    }
+
+    // Get current user's conversations
+    @GetMapping("/my")
+    public ResponseEntity<List<DirectMessage>> getMyConversations() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String username = auth.getName();
+        return ResponseEntity.ok(directMessageService.getUserConversations(username));
     }
 
     @GetMapping("/{id}")
@@ -62,7 +76,19 @@ public class DirectMessageController {
 
     @PostMapping("/start")
     public ResponseEntity<DirectMessage> startConversation(@RequestBody StartConversationRequest request) {
-        DirectMessage dm = directMessageService.getOrCreateConversation(request.getUser1(), request.getUser2());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String currentUser = auth.getName();
+        
+        // Support both formats: recipientUsername (from mobile) or user1/user2 (legacy)
+        String recipient = request.getRecipientUsername() != null ? request.getRecipientUsername() : request.getUser2();
+        if (recipient == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        DirectMessage dm = directMessageService.getOrCreateConversation(currentUser, recipient);
         return ResponseEntity.status(HttpStatus.CREATED).body(dm);
     }
 
@@ -99,10 +125,73 @@ public class DirectMessageController {
     @PostMapping("/conversation/{conversationId}/read")
     public ResponseEntity<DirectMessage> markAsRead(
             @PathVariable String conversationId,
-            @RequestParam String reader) {
-        DirectMessage dm = directMessageService.markMessagesAsRead(conversationId, reader);
+            @RequestParam(required = false) String reader) {
+        // Use authenticated user if reader not provided
+        String readerUsername = reader;
+        if (readerUsername == null) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+                readerUsername = auth.getName();
+            }
+        }
+        if (readerUsername == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        DirectMessage dm = directMessageService.markMessagesAsRead(conversationId, readerUsername);
         if (dm != null) {
             return ResponseEntity.ok(dm);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Alternative endpoint for mobile app: POST /direct-messages/{id}/read
+    @PostMapping("/{id}/read")
+    public ResponseEntity<DirectMessage> markConversationAsRead(@PathVariable String id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String reader = auth.getName();
+        Optional<DirectMessage> conversationOpt = directMessageService.getConversationById(id);
+        if (conversationOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        DirectMessage updated = directMessageService.markMessagesAsRead(
+                conversationOpt.get().getConversationId(),
+                reader
+        );
+
+        if (updated != null) {
+            return ResponseEntity.ok(updated);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    // Alternative endpoint for mobile app: POST /direct-messages/{id}/messages
+    @PostMapping("/{id}/messages")
+    public ResponseEntity<DirectMessage> sendMessageToId(
+            @PathVariable String id,
+            @RequestBody SendToConversationRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String sender = auth.getName();
+        Optional<DirectMessage> conversationOpt = directMessageService.getConversationById(id);
+        if (conversationOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        DirectMessage updated = directMessageService.sendMessage(
+                conversationOpt.get().getConversationId(),
+                sender,
+                request.getText(),
+                request.getMediaUrls()
+        );
+
+        if (updated != null) {
+            return ResponseEntity.ok(updated);
         }
         return ResponseEntity.notFound().build();
     }
@@ -117,11 +206,14 @@ public class DirectMessageController {
     public static class StartConversationRequest {
         private String user1;
         private String user2;
+        private String recipientUsername;
 
         public String getUser1() { return user1; }
         public void setUser1(String user1) { this.user1 = user1; }
         public String getUser2() { return user2; }
         public void setUser2(String user2) { this.user2 = user2; }
+        public String getRecipientUsername() { return recipientUsername; }
+        public void setRecipientUsername(String recipientUsername) { this.recipientUsername = recipientUsername; }
     }
 
     public static class SendMessageRequest {

@@ -1,6 +1,6 @@
 package com.example.campusCircle.service;
 
-import com.example.campusCircle.model.nosql.CommentContent;
+import com.example.campusCircle.model.CommentContent;
 import com.example.campusCircle.repository.CommentContentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,12 @@ public class CommentContentService {
         return commentContentRepository.findById(id);
     }
 
-    public Optional<CommentContent> getCommentByCommentId(String commentId) {
+    public CommentContent getCommentContent(Long commentId) {
+        return commentContentRepository.findByCommentId(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment content not found"));
+    }
+
+    public Optional<CommentContent> getCommentByCommentId(Long commentId) {
         return commentContentRepository.findByCommentId(commentId);
     }
 
@@ -30,15 +35,30 @@ public class CommentContentService {
         return commentContentRepository.findByBodyTextContaining(keyword);
     }
 
+    public CommentContent createCommentContent(CommentContent commentContent) {
+        return commentContentRepository.save(commentContent);
+    }
+
     public CommentContent saveComment(CommentContent commentContent) {
         return commentContentRepository.save(commentContent);
+    }
+
+    public CommentContent updateCommentContent(Long commentId, String content, List<String> mediaUrls) {
+        Optional<CommentContent> existing = commentContentRepository.findByCommentId(commentId);
+        if (existing.isPresent()) {
+            CommentContent commentContent = existing.get();
+            commentContent.setContent(content);
+            commentContent.setMediaUrls(mediaUrls);
+            return commentContentRepository.save(commentContent);
+        }
+        throw new RuntimeException("Comment content not found");
     }
 
     public void deleteComment(String id) {
         commentContentRepository.deleteById(id);
     }
 
-    public void deleteCommentByCommentId(String commentId) {
+    public void deleteCommentByCommentId(Long commentId) {
         commentContentRepository.deleteByCommentId(commentId);
     }
 }

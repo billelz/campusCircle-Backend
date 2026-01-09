@@ -39,13 +39,19 @@ public class AuthService {
             throw new RuntimeException("Email is already registered");
         }
 
+        // Validate university email
+        String email = request.getEmail().toLowerCase();
+        if (!isValidUniversityEmail(email)) {
+            throw new RuntimeException("Please use a valid university email (.edu, .university, or academic domain)");
+        }
+
         // Create new user
         Users user = new Users();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setRealName(request.getRealName());
-        user.setVerificationStatus("PENDING");
+        user.setVerificationStatus(Users.VerificationStatus.PENDING);
         user.setCreatedAt(LocalDateTime.now());
 
         usersRepository.save(user);
@@ -64,7 +70,7 @@ public class AuthService {
                         .username(user.getUsername())
                         .email(user.getEmail())
                         .realName(user.getRealName())
-                        .verificationStatus(user.getVerificationStatus())
+                        .verificationStatus(user.getVerificationStatus() != null ? user.getVerificationStatus().name() : null)
                         .build())
                 .build();
     }
@@ -95,7 +101,7 @@ public class AuthService {
                         .username(user.getUsername())
                         .email(user.getEmail())
                         .realName(user.getRealName())
-                        .verificationStatus(user.getVerificationStatus())
+                        .verificationStatus(user.getVerificationStatus() != null ? user.getVerificationStatus().name() : null)
                         .build())
                 .build();
     }
@@ -128,7 +134,7 @@ public class AuthService {
                         .username(user.getUsername())
                         .email(user.getEmail())
                         .realName(user.getRealName())
-                        .verificationStatus(user.getVerificationStatus())
+                        .verificationStatus(user.getVerificationStatus() != null ? user.getVerificationStatus().name() : null)
                         .build())
                 .build();
     }
@@ -156,5 +162,34 @@ public class AuthService {
 
     public boolean checkEmailAvailability(String email) {
         return !usersRepository.existsByEmail(email);
+    }
+
+    /**
+     * Validates if the email is a university email
+     * Accepts: .edu, .university, .ac.XX (academic), .edu.XX
+     */
+    private boolean isValidUniversityEmail(String email) {
+        if (email == null || !email.contains("@")) {
+            return false;
+        }
+        String domain = email.substring(email.indexOf("@") + 1).toLowerCase();
+        
+        // Check for .edu domains
+        if (domain.endsWith(".edu")) {
+            return true;
+        }
+        // Check for .university domains
+        if (domain.endsWith(".university")) {
+            return true;
+        }
+        // Check for academic domains (.ac.uk, .ac.jp, etc.)
+        if (domain.matches(".*\\.ac\\.[a-z]{2,3}$")) {
+            return true;
+        }
+        // Check for .edu.XX domains (.edu.au, .edu.cn, etc.)
+        if (domain.matches(".*\\.edu\\.[a-z]{2,3}$")) {
+            return true;
+        }
+        return false;
     }
 }

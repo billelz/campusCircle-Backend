@@ -2,6 +2,7 @@ package com.example.campusCircle.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,8 @@ public class SignupRequest {
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@([A-Za-z0-9-]+\\.)*(edu|university|ac\\.[a-z]{2}|edu\\.[a-z]{2})$",
+             message = "Please use a valid university email (.edu, .university, or academic domain)")
     private String email;
 
     @NotBlank(message = "Password is required")

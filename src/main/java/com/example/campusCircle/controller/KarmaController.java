@@ -1,11 +1,15 @@
 package com.example.campusCircle.controller;
 
 import com.example.campusCircle.model.Karma;
+import com.example.campusCircle.model.Users;
 import com.example.campusCircle.service.KarmaService;
+import com.example.campusCircle.service.PostService;
+import com.example.campusCircle.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +21,12 @@ public class KarmaController {
 
     @Autowired
     private KarmaService karmaService;
+
+    @Autowired
+    private UsersService usersService;
+
+    @Autowired
+    private PostService postService;
 
     @GetMapping
     public ResponseEntity<List<Karma>> getAllKarma() {
@@ -46,8 +56,40 @@ public class KarmaController {
     }
 
     @GetMapping("/leaderboard")
-    public ResponseEntity<List<Karma>> getLeaderboard() {
-        return ResponseEntity.ok(karmaService.getLeaderboard());
+    public ResponseEntity<List<Map<String, Object>>> getLeaderboard() {
+        // Get top contributors based on most upvoted posts
+        List<Object[]> topContributors = postService.getTopContributorsByUpvotes();
+        List<Map<String, Object>> leaderboard = new ArrayList<>();
+        
+        for (Object[] row : topContributors) {
+            try {
+                String username = (String) row[0];
+                Long totalUpvotes = ((Number) row[1]).longValue();
+                
+                Users user = usersService.getUserByUsername(username);
+                Map<String, Object> entry = new HashMap<>();
+                entry.put("id", user.getId());
+                entry.put("username", user.getUsername());
+                entry.put("profilePictureUrl", user.getProfilePictureUrl());
+                entry.put("totalUpvotes", totalUpvotes);
+                
+                // Also include karma info if available
+                try {
+                    Karma karma = karmaService.getKarmaByUserId(user.getId()).orElse(null);
+                    if (karma != null) {
+                        entry.put("totalKarma", karma.getKarmaScore());
+                        entry.put("postKarma", karma.getPostKarma());
+                        entry.put("commentKarma", karma.getCommentKarma());
+                    }
+                } catch (Exception ignored) {}
+                
+                leaderboard.add(entry);
+            } catch (Exception ignored) {
+                // Skip users that don't exist
+            }
+        }
+        
+        return ResponseEntity.ok(leaderboard);
     }
 
     @GetMapping("/top/{limit}")

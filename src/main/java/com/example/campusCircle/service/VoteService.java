@@ -3,6 +3,7 @@ package com.example.campusCircle.service;
 import com.example.campusCircle.model.Vote;
 import com.example.campusCircle.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,14 @@ public class VoteService {
 
     @Autowired
     private KarmaService karmaService;
+
+    @Autowired
+    @Lazy
+    private PostService postService;
+
+    @Autowired
+    @Lazy
+    private CommentService commentService;
 
     public List<Vote> getAllVotes() {
         return voteRepository.findAll();
@@ -61,6 +70,8 @@ public class VoteService {
                 voteRepository.delete(vote);
                 // Update karma (reverse the old vote)
                 updateKarma(authorUserId, contentType, -oldValue, channelId);
+                // Update content vote counts (reverse the old vote)
+                updateContentVoteCounts(contentId, contentType, oldValue == 1 ? -1 : 0, oldValue == -1 ? -1 : 0);
                 return null;
             } else {
                 // Change vote direction
@@ -68,6 +79,14 @@ public class VoteService {
                 voteRepository.save(vote);
                 // Update karma (reverse old + add new = 2x change)
                 updateKarma(authorUserId, contentType, voteValue * 2, channelId);
+                // Update content vote counts (switch from one to other)
+                if (voteValue == 1) {
+                    // Changed from downvote to upvote
+                    updateContentVoteCounts(contentId, contentType, 1, -1);
+                } else {
+                    // Changed from upvote to downvote
+                    updateContentVoteCounts(contentId, contentType, -1, 1);
+                }
                 return vote;
             }
         } else {
@@ -80,7 +99,22 @@ public class VoteService {
             voteRepository.save(vote);
             // Update karma
             updateKarma(authorUserId, contentType, voteValue, channelId);
+            // Update content vote counts
+            updateContentVoteCounts(contentId, contentType, voteValue == 1 ? 1 : 0, voteValue == -1 ? 1 : 0);
             return vote;
+        }
+    }
+
+    private void updateContentVoteCounts(Long contentId, Vote.ContentType contentType, int upvoteChange, int downvoteChange) {
+        try {
+            if (contentType == Vote.ContentType.POST) {
+                postService.updateVoteCounts(contentId, upvoteChange, downvoteChange);
+            } else if (contentType == Vote.ContentType.COMMENT) {
+                commentService.updateVoteCounts(contentId, upvoteChange, downvoteChange);
+            }
+        } catch (Exception e) {
+            // Log but don't fail the vote operation
+            System.err.println("Failed to update vote counts: " + e.getMessage());
         }
     }
 
