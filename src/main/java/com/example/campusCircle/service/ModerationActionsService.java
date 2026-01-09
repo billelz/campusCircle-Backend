@@ -21,7 +21,8 @@ public class ModerationActionsService {
     }
 
     public ModerationActions getModerationAction(Long id) {
-        return moderationActionsRepository.findById(id).orElseThrow(() -> new RuntimeException("Moderation action not found"));
+        return moderationActionsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Moderation action not found"));
     }
 
     public List<ModerationActions> getAllModerationActions() {
@@ -33,7 +34,7 @@ public class ModerationActionsService {
 
         existing.setActionType(updated.getActionType());
         existing.setContentId(updated.getContentId());
-        existing.setModeratorUsername(updated.getModeratorUsername());
+        existing.setModerator(updated.getModerator());
         existing.setReason(updated.getReason());
         existing.setTimestamp(updated.getTimestamp());
 
