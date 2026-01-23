@@ -51,10 +51,16 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
 
+      - name: Generate timestamp tag
+        id: ts
+        run: echo "value=$(date -u +%Y%m%d%H%M%S)" >> "$GITHUB_OUTPUT"
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            ${{ steps.meta.outputs.tags }}
+            ghcr.io/${{ github.repository }}:${{ steps.ts.outputs.value }}
           labels: ${{ steps.meta.outputs.labels }}
