@@ -1,7 +1,9 @@
 package com.example.campusCircle.service;
 
 import com.example.campusCircle.dto.*;
+import com.example.campusCircle.model.University;
 import com.example.campusCircle.model.Users;
+import com.example.campusCircle.repository.UniversityRepository;
 import com.example.campusCircle.repository.UsersRepository;
 import com.example.campusCircle.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class AuthService {
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private UniversityRepository universityRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -27,6 +34,13 @@ public class AuthService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    // Common personal email domains that are NOT allowed
+    private static final List<String> BLOCKED_DOMAINS = Arrays.asList(
+        "gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "live.com",
+        "aol.com", "icloud.com", "mail.com", "protonmail.com", "zoho.com",
+        "yandex.com", "gmx.com", "fastmail.com", "tutanota.com"
+    );
 
     public AuthResponse register(SignupRequest request) {
         // Check if username exists
@@ -42,8 +56,12 @@ public class AuthService {
         // Validate university email
         String email = request.getEmail().toLowerCase();
         if (!isValidUniversityEmail(email)) {
-            throw new RuntimeException("Please use a valid university email (.edu, .university, or academic domain)");
+            throw new RuntimeException("Please use a valid university or educational institution email. Personal email domains (Gmail, Yahoo, etc.) are not accepted.");
         }
+
+        // Extract domain and find/create university
+        String domain = extractDomain(email);
+        University university = findOrCreateUniversity(domain);
 
         // Create new user
         Users user = new Users();
@@ -51,6 +69,7 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setRealName(request.getRealName());
+        user.setUniversity(university);
         user.setVerificationStatus(Users.VerificationStatus.PENDING);
         user.setCreatedAt(LocalDateTime.now());
 
@@ -70,6 +89,8 @@ public class AuthService {
                         .username(user.getUsername())
                         .email(user.getEmail())
                         .realName(user.getRealName())
+                        .universityId(university.getId())
+                        .universityName(university.getName())
                         .verificationStatus(user.getVerificationStatus() != null ? user.getVerificationStatus().name() : null)
                         .build())
                 .build();
@@ -101,6 +122,8 @@ public class AuthService {
                         .username(user.getUsername())
                         .email(user.getEmail())
                         .realName(user.getRealName())
+                        .universityId(user.getUniversity() != null ? user.getUniversity().getId() : null)
+                        .universityName(user.getUniversity() != null ? user.getUniversity().getName() : null)
                         .verificationStatus(user.getVerificationStatus() != null ? user.getVerificationStatus().name() : null)
                         .build())
                 .build();
@@ -134,6 +157,8 @@ public class AuthService {
                         .username(user.getUsername())
                         .email(user.getEmail())
                         .realName(user.getRealName())
+                        .universityId(user.getUniversity() != null ? user.getUniversity().getId() : null)
+                        .universityName(user.getUniversity() != null ? user.getUniversity().getName() : null)
                         .verificationStatus(user.getVerificationStatus() != null ? user.getVerificationStatus().name() : null)
                         .build())
                 .build();
@@ -165,31 +190,87 @@ public class AuthService {
     }
 
     /**
-     * Validates if the email is a university email
-     * Accepts: .edu, .university, .ac.XX (academic), .edu.XX
+     * Validates if the email is a university/institutional email
+     * Rejects common personal email domains
      */
     private boolean isValidUniversityEmail(String email) {
         if (email == null || !email.contains("@")) {
             return false;
         }
-        String domain = email.substring(email.indexOf("@") + 1).toLowerCase();
+        String domain = extractDomain(email);
         
-        // Check for .edu domains
-        if (domain.endsWith(".edu")) {
-            return true;
+        // Reject blocked personal email domains
+        if (BLOCKED_DOMAINS.contains(domain)) {
+            return false;
         }
-        // Check for .university domains
-        if (domain.endsWith(".university")) {
-            return true;
+        
+        // Accept any other domain (university, company, institution)
+        return true;
+    }
+
+    /**
+     * Extracts domain from email address
+     */
+    private String extractDomain(String email) {
+        return email.substring(email.indexOf("@") + 1).toLowerCase();
+    }
+
+    /**
+     * Extracts university name from domain
+     * e.g., horizon-university.tn -> Horizon University
+     * e.g., mit.edu -> MIT
+     * e.g., stanford.edu -> Stanford
+     */
+    private String extractUniversityName(String domain) {
+        // Remove TLD (e.g., .edu, .tn, .com, etc.)
+        String name = domain;
+        int lastDot = name.lastIndexOf(".");
+        if (lastDot > 0) {
+            name = name.substring(0, lastDot);
         }
-        // Check for academic domains (.ac.uk, .ac.jp, etc.)
-        if (domain.matches(".*\\.ac\\.[a-z]{2,3}$")) {
-            return true;
+        
+        // Handle .edu.XX or .ac.XX domains
+        if (name.endsWith(".edu") || name.endsWith(".ac")) {
+            lastDot = name.lastIndexOf(".");
+            if (lastDot > 0) {
+                name = name.substring(0, lastDot);
+            }
         }
-        // Check for .edu.XX domains (.edu.au, .edu.cn, etc.)
-        if (domain.matches(".*\\.edu\\.[a-z]{2,3}$")) {
-            return true;
+
+        // Replace hyphens and underscores with spaces
+        name = name.replace("-", " ").replace("_", " ");
+        
+        // Capitalize each word
+        String[] words = name.split("\\s+");
+        StringBuilder result = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                // Check if it's an acronym (all uppercase or common acronyms)
+                if (word.length() <= 4 && word.matches("[a-zA-Z]+")) {
+                    result.append(word.toUpperCase());
+                } else {
+                    result.append(Character.toUpperCase(word.charAt(0)));
+                    result.append(word.substring(1).toLowerCase());
+                }
+                result.append(" ");
+            }
         }
-        return false;
+        
+        return result.toString().trim();
+    }
+
+    /**
+     * Finds existing university by domain or creates a new one
+     */
+    private University findOrCreateUniversity(String domain) {
+        return universityRepository.findByDomain(domain)
+                .orElseGet(() -> {
+                    University newUniversity = new University();
+                    newUniversity.setDomain(domain);
+                    newUniversity.setName(extractUniversityName(domain));
+                    newUniversity.setActiveStatus(true);
+                    newUniversity.setStudentCount(1);
+                    return universityRepository.save(newUniversity);
+                });
     }
 }

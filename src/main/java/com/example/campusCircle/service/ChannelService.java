@@ -60,6 +60,10 @@ public class ChannelService {
         return channelRepository.searchChannels(query);
     }
 
+    public List<Channel> getChannelsByCreator(String username) {
+        return channelRepository.findByCreatedBy(username);
+    }
+
     public Channel updateChannel(Long id, Channel updated) {
         Channel existing = getChannel(id);
 
