@@ -14,9 +14,15 @@ public interface BadgeRepository extends JpaRepository<Badge, Long> {
     
     Optional<Badge> findByUserIdAndBadgeType(Long userId, Badge.BadgeType badgeType);
     
+    Optional<Badge> findByUserIdAndBadgeTypeAndChannelId(Long userId, Badge.BadgeType badgeType, Long channelId);
+    
+    List<Badge> findByUserIdAndChannelId(Long userId, Long channelId);
+    
     List<Badge> findByBadgeType(Badge.BadgeType badgeType);
     
     List<Badge> findByChannelId(Long channelId);
     
     boolean existsByUserIdAndBadgeType(Long userId, Badge.BadgeType badgeType);
+    
+    boolean existsByUserIdAndBadgeTypeAndChannelId(Long userId, Badge.BadgeType badgeType, Long channelId);
 }
