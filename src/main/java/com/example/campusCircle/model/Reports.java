@@ -16,10 +16,19 @@ public class Reports {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "content_id")
     private Long contentId;
-    private Long reporterUserId;
+
+    @ManyToOne
+    @JoinColumn(name = "reporter_user_id")
+    private Users reporter;
+
     private String reason;
     private String status;
-    private String resolvedBy;
+
+    @ManyToOne
+    @JoinColumn(name = "resolved_by", referencedColumnName = "username")
+    private Users resolvedBy;
+
     private String resolution;
 }

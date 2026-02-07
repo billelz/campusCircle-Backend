@@ -32,7 +32,7 @@ public class ReportsService {
         Reports existing = getReport(id);
 
         existing.setContentId(updated.getContentId());
-        existing.setReporterUserId(updated.getReporterUserId());
+        existing.setReporter(updated.getReporter());
         existing.setReason(updated.getReason());
         existing.setStatus(updated.getStatus());
         existing.setResolvedBy(updated.getResolvedBy());
