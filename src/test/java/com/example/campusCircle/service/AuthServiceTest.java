@@ -20,7 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.campusCircle.dto.ChangePasswordRequest;
 import com.example.campusCircle.dto.SignupRequest;
 import com.example.campusCircle.dto.AuthResponse;
+import com.example.campusCircle.model.University;
 import com.example.campusCircle.model.Users;
+import com.example.campusCircle.repository.UniversityRepository;
 import com.example.campusCircle.repository.UsersRepository;
 import com.example.campusCircle.security.JwtTokenProvider;
 
@@ -40,20 +42,30 @@ class AuthServiceTest {
     @Mock
     private AuthenticationManager authenticationManager;
 
+    @Mock
+    private UniversityRepository universityRepository;
+
     @InjectMocks
     private AuthService authService;
 
     private Users testUser;
     private SignupRequest signupRequest;
+    private University testUniversity;
 
     @BeforeEach
     void setUp() {
+        testUniversity = new University();
+        testUniversity.setId(1L);
+        testUniversity.setName("University edu");
+        testUniversity.setDomain("university.edu");
+
         testUser = Users.builder()
                 .id(1L)
                 .username("testuser")
                 .email("test@university.edu")
                 .passwordHash("hashedPassword")
                 .realName("Test User")
+                .university(testUniversity)
                 .verificationStatus(Users.VerificationStatus.PENDING)
                 .build();
 
@@ -102,7 +114,7 @@ class AuthServiceTest {
         // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class,
                 () -> authService.register(signupRequest));
-        assertTrue(exception.getMessage().contains("valid university email"));
+        assertTrue(exception.getMessage().contains("valid university"));
         verify(usersRepository, never()).save(any());
     }
 
@@ -112,6 +124,7 @@ class AuthServiceTest {
         // Arrange
         when(usersRepository.existsByUsername("newuser")).thenReturn(false);
         when(usersRepository.existsByEmail("newuser@university.edu")).thenReturn(false);
+        when(universityRepository.findByDomain("university.edu")).thenReturn(Optional.of(testUniversity));
         when(passwordEncoder.encode("password123")).thenReturn("hashedPassword");
         when(usersRepository.save(any(Users.class))).thenAnswer(invocation -> {
             Users user = invocation.getArgument(0);
@@ -140,6 +153,7 @@ class AuthServiceTest {
         signupRequest.setEmail("student@harvard.edu");
         when(usersRepository.existsByUsername("newuser")).thenReturn(false);
         when(usersRepository.existsByEmail("student@harvard.edu")).thenReturn(false);
+        when(universityRepository.findByDomain("harvard.edu")).thenReturn(Optional.of(testUniversity));
         when(passwordEncoder.encode(anyString())).thenReturn("hashedPassword");
         when(usersRepository.save(any(Users.class))).thenAnswer(i -> {
             Users u = i.getArgument(0);
@@ -165,6 +179,7 @@ class AuthServiceTest {
         signupRequest.setEmail("student@oxford.ac.uk");
         when(usersRepository.existsByUsername("newuser")).thenReturn(false);
         when(usersRepository.existsByEmail("student@oxford.ac.uk")).thenReturn(false);
+        when(universityRepository.findByDomain("oxford.ac.uk")).thenReturn(Optional.of(testUniversity));
         when(passwordEncoder.encode(anyString())).thenReturn("hashedPassword");
         when(usersRepository.save(any(Users.class))).thenAnswer(i -> {
             Users u = i.getArgument(0);
