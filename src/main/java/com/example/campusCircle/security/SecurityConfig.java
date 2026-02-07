@@ -71,6 +71,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/post-content/test").permitAll()
                         .requestMatchers("/api/test/moderation/**").permitAll()
                         // All other endpoints require authentication
+                        .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
