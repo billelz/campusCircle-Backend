@@ -1,11 +1,15 @@
 package com.example.campusCircle.service;
 
+import com.example.campusCircle.model.nosql.ModerationQueue;
 import com.example.campusCircle.model.nosql.PostContent;
 import com.example.campusCircle.repository.PostContentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -13,6 +17,12 @@ public class PostContentService {
 
     @Autowired
     private PostContentRepository postContentRepository;
+
+    @Autowired
+    private AIService aiService;
+
+    @Autowired
+    private ModerationQueueService moderationQueueService;
 
     public List<PostContent> getAllPosts() {
         return postContentRepository.findAll();
@@ -50,7 +60,32 @@ public class PostContentService {
         if (postContent.getTrendingScore() == null) {
             postContent.setTrendingScore(0.0);
         }
+
+        // AI Analysis
+        analyzeAndFlagPost(postContent);
+
         return postContentRepository.save(postContent);
+    }
+
+    private void analyzeAndFlagPost(PostContent postContent) {
+        Map<String, Object> aiResults = aiService.analyzeContent(postContent.getBodyText());
+        double toxicityScore = (double) aiResults.get("score");
+        List<String> flags = (List<String>) aiResults.get("flags");
+
+        // Persist the score in the document
+        postContent.setToxicityScore(toxicityScore);
+
+        if (toxicityScore > 0.6 || (boolean) aiResults.get("isCrisis")) {
+            ModerationQueue moderationQueue = new ModerationQueue();
+            moderationQueue.setContentId(postContent.getPostId());
+            moderationQueue.setContentType("post");
+            moderationQueue.setContentText(postContent.getBodyText());
+            moderationQueue.setAiModerationScore(toxicityScore);
+            moderationQueue.setAiFlags(flags);
+            moderationQueue.setStatus("pending");
+            moderationQueue.setFlaggedAt(LocalDateTime.now());
+            moderationQueueService.saveModerationQueue(moderationQueue);
+        }
     }
 
     public PostContent savePost(PostContent postContent) {
@@ -60,6 +95,9 @@ public class PostContentService {
         if (postContent.getTrendingScore() == null) {
             postContent.setTrendingScore(0.0);
         }
+
+        analyzeAndFlagPost(postContent);
+
         return postContentRepository.save(postContent);
     }
 

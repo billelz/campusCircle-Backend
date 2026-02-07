@@ -15,28 +15,31 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostContent {
-    
+
     @Id
     private String id;
-    
+
     @Field("post_id")
     private String postId;
-    
+
     @Field("body_text")
     private String bodyText;
-    
+
     @Field("media_urls")
     private List<String> mediaUrls;
-    
+
     @Field("poll_data")
     private Map<String, Object> pollData;
-    
+
     @Field("link_metadata")
     private Map<String, Object> linkMetadata;
-    
+
     @Field("view_count")
     private Long viewCount;
-    
+
     @Field("trending_score")
     private Double trendingScore;
+
+    @Field("toxicity_score")
+    private Double toxicityScore;
 }

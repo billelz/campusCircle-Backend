@@ -58,7 +58,8 @@ public class SecurityConfig {
                         // Public read for channels, posts, and leaderboard
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/channels/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/posts/**").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/subscriptions/channel/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/subscriptions/channel/**")
+                        .permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/karma/leaderboard").permitAll()
                         // WebSocket endpoints
                         .requestMatchers("/ws/**").permitAll()
@@ -68,9 +69,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/user-preferences/test").permitAll()
                         .requestMatchers("/api/user-activity/test").permitAll()
                         .requestMatchers("/api/post-content/test").permitAll()
+                        .requestMatchers("/api/test/moderation/**").permitAll()
                         // All other endpoints require authentication
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
