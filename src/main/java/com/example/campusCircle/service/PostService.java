@@ -1,6 +1,6 @@
 package com.example.campusCircle.service;
 
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -18,6 +18,7 @@ public class PostService {
     }
 
     public Post createPost(Post post) {
+        post.setCreatedAt(LocalDateTime.now());
         return postRepository.save(post);
     }
 
@@ -30,18 +31,60 @@ public class PostService {
         return postRepository.findAllActive();
     }
 
+    public List<Post> getPostsByChannel(Long channelId) {
+        return postRepository.findByChannelIdAndDeletedAtIsNullOrderByCreatedAtDesc(channelId);
+    }
+
+    public List<Post> getPostsByAuthor(String username) {
+        return postRepository.findByAuthorUsernameAndDeletedAtIsNullOrderByCreatedAtDesc(username);
+    }
+
+    public List<Post> getTrendingPosts(int limit) {
+        return postRepository.findTrendingPosts(limit);
+    }
+
     public Post updatePost(Long id, Post updated) {
         Post existing = getPostById(id);
 
         existing.setTitle(updated.getTitle());
-        existing.setAuthorUsername(updated.getAuthorUsername());
-        existing.setChannelId(updated.getChannelId());
+        existing.setEditedAt(LocalDateTime.now());
 
         return postRepository.save(existing);
     }
 
     public void deletePost(Long id) {
-        postRepository.deleteById(id);
+        Post post = getPostById(id);
+        post.setDeletedAt(LocalDateTime.now());
+        postRepository.save(post);
+    }
+
+    public void incrementCommentCount(Long postId) {
+        Post post = getPostById(postId);
+        post.setCommentCount(post.getCommentCount() + 1);
+        postRepository.save(post);
+    }
+
+    public void decrementCommentCount(Long postId) {
+        Post post = getPostById(postId);
+        if (post.getCommentCount() > 0) {
+            post.setCommentCount(post.getCommentCount() - 1);
+        }
+        postRepository.save(post);
+    }
+
+    public void updateVoteCounts(Long postId, int upvoteChange, int downvoteChange) {
+        Post post = getPostById(postId);
+        post.setUpvoteCount(post.getUpvoteCount() + upvoteChange);
+        post.setDownvoteCount(post.getDownvoteCount() + downvoteChange);
+        postRepository.save(post);
+    }
+
+    public List<Post> searchPosts(String query) {
+        return postRepository.searchPosts(query);
+    }
+
+    public List<Object[]> getTopContributorsByUpvotes() {
+        return postRepository.findTopContributorsByUpvotes();
     }
 }
 

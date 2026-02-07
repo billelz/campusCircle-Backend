@@ -1,0 +1,528 @@
+{
+    "info": {
+        "_postman_id": "moderation-queue-api",
+        "name": "Moderation Queue API",
+        "description": "Complete CRUD operations for Moderation Queue MongoDB collection - flagged content with AI scores and user reports",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Test MongoDB Connection",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/test",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "test"
+                    ]
+                },
+                "description": "Tests the MongoDB connection and returns status with all moderation queue items"
+            },
+            "response": []
+        },
+        {
+            "name": "Get All Moderation Queue",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue"
+                    ]
+                },
+                "description": "Retrieves all moderation queue items from MongoDB"
+            },
+            "response": []
+        },
+        {
+            "name": "Get Moderation Queue by ID",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/REPLACE_WITH_ACTUAL_ID",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "REPLACE_WITH_ACTUAL_ID"
+                    ]
+                },
+                "description": "Retrieves a specific moderation queue item by ID"
+            },
+            "response": []
+        },
+        {
+            "name": "Get Moderation Queue by Content ID",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/content/post_789",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "content",
+                        "post_789"
+                    ]
+                },
+                "description": "Retrieves moderation queue item for a specific content"
+            },
+            "response": []
+        },
+        {
+            "name": "Get Moderation Queue by Status",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/status/pending",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "status",
+                        "pending"
+                    ]
+                },
+                "description": "Gets all items with specific status (pending, approved, rejected, escalated)"
+            },
+            "response": []
+        },
+        {
+            "name": "Get Moderation Queue by Type",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/type/post",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "type",
+                        "post"
+                    ]
+                },
+                "description": "Gets all items by content type (post or comment)"
+            },
+            "response": []
+        },
+        {
+            "name": "Get Moderation Queue by Author",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/author/spam_user",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "author",
+                        "spam_user"
+                    ]
+                },
+                "description": "Gets all flagged content by a specific author"
+            },
+            "response": []
+        },
+        {
+            "name": "Get High-Risk Content (Score Above)",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/score-above?score=0.8",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "score-above"
+                    ],
+                    "query": [
+                        {
+                            "key": "score",
+                            "value": "0.8"
+                        }
+                    ]
+                },
+                "description": "Gets content with AI moderation score above threshold (higher = more problematic)"
+            },
+            "response": []
+        },
+        {
+            "name": "Get Items Flagged After Date",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/flagged-after?date=2025-12-20T00:00:00",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "flagged-after"
+                    ],
+                    "query": [
+                        {
+                            "key": "date",
+                            "value": "2025-12-20T00:00:00"
+                        }
+                    ]
+                },
+                "description": "Gets items flagged after a specific date"
+            },
+            "response": []
+        },
+        {
+            "name": "Get Items Reviewed By Moderator",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/reviewer/admin_mod",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "reviewer",
+                        "admin_mod"
+                    ]
+                },
+                "description": "Gets all items reviewed by a specific moderator"
+            },
+            "response": []
+        },
+        {
+            "name": "Filter by Status and Type",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/filter?status=pending&contentType=post",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "filter"
+                    ],
+                    "query": [
+                        {
+                            "key": "status",
+                            "value": "pending"
+                        },
+                        {
+                            "key": "contentType",
+                            "value": "post"
+                        }
+                    ]
+                },
+                "description": "Filters items by both status and content type"
+            },
+            "response": []
+        },
+        {
+            "name": "Create Moderation Queue Item",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"contentId\": \"post_789\",\n  \"contentType\": \"post\",\n  \"contentText\": \"This is a highly inappropriate post that contains offensive language and hate speech.\",\n  \"authorUsername\": \"spam_user\",\n  \"aiModerationScore\": 0.92,\n  \"aiFlags\": [\n    \"hate_speech\",\n    \"offensive_language\",\n    \"harassment\"\n  ],\n  \"userReports\": [\n    {\n      \"reporter\": \"user_123\",\n      \"reason\": \"Contains hate speech\",\n      \"reportedAt\": \"2025-12-23T10:30:00\"\n    },\n    {\n      \"reporter\": \"user_456\",\n      \"reason\": \"Offensive content\",\n      \"reportedAt\": \"2025-12-23T11:00:00\"\n    }\n  ],\n  \"status\": \"pending\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue"
+                    ]
+                },
+                "description": "Creates a new moderation queue item for flagged content"
+            },
+            "response": []
+        },
+        {
+            "name": "Create Spam Report",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"contentId\": \"comment_999\",\n  \"contentType\": \"comment\",\n  \"contentText\": \"Buy now! Click here for amazing deals! Limited time offer!\",\n  \"authorUsername\": \"spam_bot\",\n  \"aiModerationScore\": 0.87,\n  \"aiFlags\": [\n    \"spam\",\n    \"commercial_content\"\n  ],\n  \"userReports\": [\n    {\n      \"reporter\": \"user_789\",\n      \"reason\": \"Spam advertising\",\n      \"reportedAt\": \"2025-12-23T12:00:00\"\n    }\n  ],\n  \"status\": \"pending\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue"
+                    ]
+                },
+                "description": "Creates a moderation queue item for spam content"
+            },
+            "response": []
+        },
+        {
+            "name": "Update Moderation Queue Item",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"contentId\": \"post_789\",\n  \"contentType\": \"post\",\n  \"contentText\": \"This is a highly inappropriate post that contains offensive language and hate speech.\",\n  \"authorUsername\": \"spam_user\",\n  \"aiModerationScore\": 0.92,\n  \"aiFlags\": [\n    \"hate_speech\",\n    \"offensive_language\",\n    \"harassment\"\n  ],\n  \"userReports\": [\n    {\n      \"reporter\": \"user_123\",\n      \"reason\": \"Contains hate speech\",\n      \"reportedAt\": \"2025-12-23T10:30:00\"\n    },\n    {\n      \"reporter\": \"user_456\",\n      \"reason\": \"Offensive content\",\n      \"reportedAt\": \"2025-12-23T11:00:00\"\n    },\n    {\n      \"reporter\": \"user_789\",\n      \"reason\": \"Harassment\",\n      \"reportedAt\": \"2025-12-23T12:15:00\"\n    }\n  ],\n  \"status\": \"escalated\"\n}"
+                },
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/REPLACE_WITH_ACTUAL_ID",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "REPLACE_WITH_ACTUAL_ID"
+                    ]
+                },
+                "description": "Updates an existing moderation queue item (e.g., adding more reports)"
+            },
+            "response": []
+        },
+        {
+            "name": "Review Content - Approve",
+            "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/REPLACE_WITH_ACTUAL_ID/review?reviewedBy=admin_mod&status=approved&action=none",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "REPLACE_WITH_ACTUAL_ID",
+                        "review"
+                    ],
+                    "query": [
+                        {
+                            "key": "reviewedBy",
+                            "value": "admin_mod"
+                        },
+                        {
+                            "key": "status",
+                            "value": "approved"
+                        },
+                        {
+                            "key": "action",
+                            "value": "none"
+                        }
+                    ]
+                },
+                "description": "Reviews and approves content (false positive)"
+            },
+            "response": []
+        },
+        {
+            "name": "Review Content - Reject & Remove",
+            "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/REPLACE_WITH_ACTUAL_ID/review?reviewedBy=admin_mod&status=rejected&action=content_removed",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "REPLACE_WITH_ACTUAL_ID",
+                        "review"
+                    ],
+                    "query": [
+                        {
+                            "key": "reviewedBy",
+                            "value": "admin_mod"
+                        },
+                        {
+                            "key": "status",
+                            "value": "rejected"
+                        },
+                        {
+                            "key": "action",
+                            "value": "content_removed"
+                        }
+                    ]
+                },
+                "description": "Reviews and rejects content, removing it from the platform"
+            },
+            "response": []
+        },
+        {
+            "name": "Review Content - Ban User",
+            "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/REPLACE_WITH_ACTUAL_ID/review?reviewedBy=admin_mod&status=rejected&action=user_banned",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "REPLACE_WITH_ACTUAL_ID",
+                        "review"
+                    ],
+                    "query": [
+                        {
+                            "key": "reviewedBy",
+                            "value": "admin_mod"
+                        },
+                        {
+                            "key": "status",
+                            "value": "rejected"
+                        },
+                        {
+                            "key": "action",
+                            "value": "user_banned"
+                        }
+                    ]
+                },
+                "description": "Reviews and rejects content with user ban action"
+            },
+            "response": []
+        },
+        {
+            "name": "Delete Moderation Queue Item",
+            "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/REPLACE_WITH_ACTUAL_ID",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "REPLACE_WITH_ACTUAL_ID"
+                    ]
+                },
+                "description": "Deletes a moderation queue item by ID"
+            },
+            "response": []
+        },
+        {
+            "name": "Delete by Content ID",
+            "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                    "raw": "http://localhost:8081/api/moderation-queue/content/post_789",
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "8081",
+                    "path": [
+                        "api",
+                        "moderation-queue",
+                        "content",
+                        "post_789"
+                    ]
+                },
+                "description": "Deletes a moderation queue item by content ID"
+            },
+            "response": []
+        }
+    ]
+}
