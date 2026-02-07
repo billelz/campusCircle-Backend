@@ -37,9 +37,16 @@ public class BadgeService {
 
     @Transactional
     public Badge awardBadge(Long userId, Badge.BadgeType badgeType, Long channelId) {
-        // Check if user already has this badge
-        if (badgeRepository.existsByUserIdAndBadgeType(userId, badgeType)) {
-            return badgeRepository.findByUserIdAndBadgeType(userId, badgeType).orElse(null);
+        // For channel-specific badges, check if user already has this badge for this channel
+        if (channelId != null) {
+            if (badgeRepository.existsByUserIdAndBadgeTypeAndChannelId(userId, badgeType, channelId)) {
+                return badgeRepository.findByUserIdAndBadgeTypeAndChannelId(userId, badgeType, channelId).orElse(null);
+            }
+        } else {
+            // For global badges, check if user already has this badge type
+            if (badgeRepository.existsByUserIdAndBadgeType(userId, badgeType)) {
+                return badgeRepository.findByUserIdAndBadgeType(userId, badgeType).orElse(null);
+            }
         }
 
         Badge badge = new Badge();
@@ -47,6 +54,10 @@ public class BadgeService {
         badge.setBadgeType(badgeType);
         badge.setChannelId(channelId);
         return badgeRepository.save(badge);
+    }
+
+    public List<Badge> getUserBadgesForChannel(Long userId, Long channelId) {
+        return badgeRepository.findByUserIdAndChannelId(userId, channelId);
     }
 
     @Transactional

@@ -34,6 +34,8 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
     @Query("SELECT c FROM Channel c WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(c.description) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<Channel> searchChannels(@Param("query") String query);
 
+    List<Channel> findByCreatedBy(String createdBy);
+
     @Query("SELECT c FROM Channel c WHERE c.isActive = true ORDER BY c.createdAt DESC")
     List<Channel> findRecentChannels(Pageable pageable);
 }

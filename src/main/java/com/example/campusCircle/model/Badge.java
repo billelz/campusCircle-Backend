@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "badges", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"user_id", "badge_type"})
+    @UniqueConstraint(columnNames = {"user_id", "badge_type", "channel_id"})
 })
 @Data
 @NoArgsConstructor

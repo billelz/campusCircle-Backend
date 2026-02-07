@@ -41,8 +41,8 @@ public class AuthController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Invalid username/email or password");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+            error.put("error", "Invalid username/email or password. Please check your credentials and try again.");
+            return ResponseEntity.badRequest().body(error);
         }
     }
 
