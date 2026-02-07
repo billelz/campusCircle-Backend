@@ -13,9 +13,12 @@ import com.example.campusCircle.dto.ChannelRequest;
 import com.example.campusCircle.dto.ChannelResponse;
 import com.example.campusCircle.model.Channel;
 import com.example.campusCircle.model.Channel.ChannelCategory;
+import com.example.campusCircle.model.Badge;
 import com.example.campusCircle.service.ChannelService;
 import com.example.campusCircle.service.ChannelSubscriptionService;
 import com.example.campusCircle.service.UniversityService;
+import com.example.campusCircle.service.BadgeService;
+import com.example.campusCircle.service.UsersService;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -28,13 +31,19 @@ public class ChannelController {
     private final ChannelService channelService;
     private final ChannelSubscriptionService subscriptionService;
     private final UniversityService universityService;
+    private final BadgeService badgeService;
+    private final UsersService usersService;
 
     public ChannelController(ChannelService channelService, 
                             ChannelSubscriptionService subscriptionService,
-                            UniversityService universityService) {
+                            UniversityService universityService,
+                            BadgeService badgeService,
+                            UsersService usersService) {
         this.channelService = channelService;
         this.subscriptionService = subscriptionService;
         this.universityService = universityService;
+        this.badgeService = badgeService;
+        this.usersService = usersService;
     }
 
     @PostMapping
@@ -61,6 +70,16 @@ public class ChannelController {
             } catch (Exception e) {
                 // Log but don't fail if subscription fails
                 System.out.println("Warning: Could not auto-subscribe creator to channel: " + e.getMessage());
+            }
+
+            // Award MODERATOR badge to the channel creator
+            try {
+                var user = usersService.getUserByUsername(auth.getName());
+                if (user != null) {
+                    badgeService.awardBadge(user.getId(), Badge.BadgeType.MODERATOR, created.getId());
+                }
+            } catch (Exception e) {
+                System.out.println("Warning: Could not award MODERATOR badge: " + e.getMessage());
             }
             
             return ResponseEntity.status(HttpStatus.CREATED).body(mapToResponse(created, auth.getName()));
@@ -128,6 +147,18 @@ public class ChannelController {
     @GetMapping("/search")
     public ResponseEntity<List<ChannelResponse>> search(@RequestParam String q) {
         List<Channel> channels = channelService.searchChannels(q);
+        String currentUser = getCurrentUsername();
+        
+        List<ChannelResponse> responses = channels.stream()
+                .map(channel -> mapToResponse(channel, currentUser))
+                .collect(Collectors.toList());
+        
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/created-by/{username}")
+    public ResponseEntity<List<ChannelResponse>> getByCreator(@PathVariable String username) {
+        List<Channel> channels = channelService.getChannelsByCreator(username);
         String currentUser = getCurrentUsername();
         
         List<ChannelResponse> responses = channels.stream()

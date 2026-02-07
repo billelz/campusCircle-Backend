@@ -16,6 +16,8 @@ public class PostResponse {
 
     private Long id;
     private String authorUsername;
+    private String authorUniversityName;
+    private String authorBadge; // Badge name for this channel (e.g., MODERATOR)
     private Long channelId;
     private String channelName;
     private String channelCategory;

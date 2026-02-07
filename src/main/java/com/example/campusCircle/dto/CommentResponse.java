@@ -16,7 +16,10 @@ public class CommentResponse {
 
     private Long id;
     private Long postId;
+    private Long channelId;
     private String authorUsername;
+    private String authorUniversityName;
+    private String authorBadge; // Badge name for this channel (e.g., MODERATOR)
     private Long parentCommentId;
     private String content;
     private List<String> mediaUrls;
